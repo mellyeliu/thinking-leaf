@@ -27,11 +27,11 @@ const COLLAGE_IMAGES = [
 ]
 
 const CATEGORIES = [
-  { name: 'music', icon: '/assets/icon-playlists.png' },
-  { name: 'pets', icon: '/assets/icon-pets.png' },
-  { name: 'media', icon: '/assets/comp.png' },
-  { name: 'pics', icon: '/assets/icon-pics.png' },
-  { name: 'games', icon: '/assets/icon-fun-facts.png' },
+  { name: 'music', label: '𝓜𝓤𝓢𝓘𝓒', icon: '/assets/icon-playlists.png' },
+  { name: 'pets', label: '𝓟𝓔𝓣𝓢', icon: '/assets/icon-pets.png' },
+  { name: 'media', label: '𝓜𝓔𝓓𝓘𝓐', icon: '/assets/comp.png' },
+  { name: 'pics', label: '𝓟𝓘𝓒𝓢', icon: '/assets/icon-pics.png' },
+  { name: 'games', label: '𝓖𝓐𝓜𝓔𝓢', icon: '/assets/icon-fun-facts.png' },
 ]
 
 const PIC_ICONS = [
@@ -561,6 +561,7 @@ export default function App() {
               <button
                 className={activeCategory === category.name ? 'is-active' : ''}
                 type="button"
+                aria-label={category.name}
                 onClick={() => {
                   setActiveCategory(category.name)
                   setSelectedItem(null)
@@ -572,7 +573,7 @@ export default function App() {
                     <BackgroundRemovedImage src={category.icon} alt={`${category.name} icon`} />
                   )}
                 </span>
-                <span className="category-label">{category.name}</span>
+                <span className="category-label" aria-hidden="true">{category.label}</span>
               </button>
             ))}
           </nav>

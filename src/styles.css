@@ -581,7 +581,10 @@ body {
   align-items: center;
   flex: 0 0 auto;
   padding: 6px 12px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
   color: #2f2264;
   border-top: 1.5px solid #2f2264;
   background: rgb(255 255 255 / 58%);
@@ -607,6 +610,12 @@ body {
 
 .finder-folder {
   font-style: normal;
+}
+
+.path-tier,
+.path-file,
+.path-divider {
+  flex: 0 0 auto;
 }
 
 .path-tier,

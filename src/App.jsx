@@ -1,59 +1,59 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 const COLLAGE_IMAGES = [
-  { src: '/assets/child-at-play-sign.png', alt: 'Slow sign', className: 'sign' },
-  { src: '/assets/activity-cube-cutout.png', alt: 'Activity cube', className: 'activity', cutout: true, aggressiveCutout: true },
-  { src: '/assets/sea-stax-box.png', alt: 'Sea Stax puzzle box', className: 'sea', cutout: true },
-  { src: '/assets/sea-stax-pieces.png', alt: 'Sea Stax animal pieces', className: 'sea-pieces', cutout: true, aggressiveCutout: true },
-  { src: '/assets/joker-blue.png', alt: 'Blue joker card', className: 'joker-blue' },
-  { src: '/assets/joker-sketch.png', alt: 'Joker sketch', className: 'joker-sketch' },
-  { src: '/assets/patriarchy-advisory.png', alt: 'Patriarchy advisory', className: 'advisory', still: true },
-  { src: '/assets/clippy.png', alt: 'Clippy', className: 'clippy' },
-  { src: '/assets/tamagotchi-pink.png', alt: 'Pink virtual pet', className: 'tamagotchi' },
-  { src: '/assets/thisway-doll.png', alt: 'Thisway doll', className: 'thisway-doll' },
-  { src: '/assets/retro-paint.png', alt: 'Retro Paint window', className: 'retro-paint', cutout: true },
-  { src: '/assets/candle-creature.png', alt: 'Candle creature', className: 'candle-creature' },
-  { src: '/assets/pepper-oil.png', alt: 'Pepper oil bottle', className: 'pepper-oil' },
-  { src: '/assets/neon-pet.png', alt: 'Neon virtual pet', className: 'neon-pet' },
-  { src: '/assets/pixel-face.png', alt: 'Pixel-art face', className: 'pixel-face' },
+  { src: '/assets/child-at-play-sign.webp', alt: 'Slow sign', className: 'sign' },
+  { src: '/assets/activity-cube-cutout.webp', alt: 'Activity cube', className: 'activity', cutout: true, aggressiveCutout: true },
+  { src: '/assets/sea-stax-box.webp', alt: 'Sea Stax puzzle box', className: 'sea', cutout: true },
+  { src: '/assets/sea-stax-pieces.webp', alt: 'Sea Stax animal pieces', className: 'sea-pieces', cutout: true, aggressiveCutout: true },
+  { src: '/assets/joker-blue.webp', alt: 'Blue joker card', className: 'joker-blue' },
+  { src: '/assets/joker-sketch.webp', alt: 'Joker sketch', className: 'joker-sketch' },
+  { src: '/assets/patriarchy-advisory.webp', alt: 'Patriarchy advisory', className: 'advisory', still: true },
+  { src: '/assets/clippy.webp', alt: 'Clippy', className: 'clippy' },
+  { src: '/assets/tamagotchi-pink.webp', alt: 'Pink virtual pet', className: 'tamagotchi' },
+  { src: '/assets/thisway-doll.webp', alt: 'Thisway doll', className: 'thisway-doll' },
+  { src: '/assets/retro-paint.webp', alt: 'Retro Paint window', className: 'retro-paint', cutout: true },
+  { src: '/assets/candle-creature.webp', alt: 'Candle creature', className: 'candle-creature' },
+  { src: '/assets/pepper-oil.webp', alt: 'Pepper oil bottle', className: 'pepper-oil' },
+  { src: '/assets/neon-pet.webp', alt: 'Neon virtual pet', className: 'neon-pet' },
+  { src: '/assets/pixel-face.webp', alt: 'Pixel-art face', className: 'pixel-face' },
   { src: '/assets/stars.gif', alt: 'Animated green star', className: 'stars-gif' },
   { src: '/assets/Gothorita.webp', alt: 'Gothorita', className: 'gothorita' },
   { src: '/assets/greyfaerie.gif', alt: 'Animated grey faerie', className: 'grey-faerie', animatedCutout: true },
   { src: '/assets/faeriegreen.gif', alt: 'Animated green faerie', className: 'green-faerie' },
   { src: '/assets/heart.gif', alt: 'Animated winged heart', className: 'winged-heart' },
   { src: '/assets/ralts2.gif', alt: 'Animated tiny Ralts', className: 'ralts-tiny' },
-  { src: '/assets/raltss.png', alt: 'Ralts', className: 'ralts-large', cutout: true },
+  { src: '/assets/raltss.webp', alt: 'Ralts', className: 'ralts-large', cutout: true },
   { src: '/assets/sprout2.gif', alt: 'Animated sprout', className: 'sprout2-gif', animatedCutout: true },
 ]
 
 const CATEGORIES = [
-  { name: 'music', icon: '/assets/icon-playlists.png' },
-  { name: 'pets', icon: '/assets/icon-pets.png' },
-  { name: 'media', icon: '/assets/comp.png' },
-  { name: 'pics', icon: '/assets/icon-pics.png' },
-  { name: 'games', icon: '/assets/icon-fun-facts.png' },
+  { name: 'music', label: '𝓶𝓾𝓼𝓲𝓬', icon: '/assets/icon-playlists.webp' },
+  { name: 'pets', label: '𝓹𝓮𝓽𝓼', icon: '/assets/icon-pets.webp' },
+  { name: 'media', label: '𝓶𝓮𝓭𝓲𝓪', icon: '/assets/comp.webp' },
+  { name: 'pics', label: '𝓹𝓲𝓬𝓼', icon: '/assets/icon-pics.webp' },
+  { name: 'games', label: '𝓰𝓪𝓶𝓮𝓼', icon: '/assets/icon-fun-facts.webp' },
 ]
 
 const PIC_ICONS = [
-  { src: '/assets/pic-icon-01.png', name: 'charli.png' },
-  { src: '/assets/pic-icon-02.png', name: 'thailand.png' },
-  { src: '/assets/pic-icon-03.png', name: 'grocery.png' },
-  { src: '/assets/pic-icon-04.png', name: 'photoshoot.png' },
+  { src: '/assets/pic-icon-01.webp', name: 'charli.png' },
+  { src: '/assets/pic-icon-02.webp', name: 'thailand.png' },
+  { src: '/assets/pic-icon-03.webp', name: 'grocery.png' },
+  { src: '/assets/pic-icon-04.webp', name: 'photoshoot.png' },
 ]
 
 const PET_ICONS = [
-  { src: '/assets/spider-pet.png', name: 'hypatia.png' },
-  { src: '/assets/busy-town-spider.png', name: 'aspasia.png' },
-  { src: '/assets/coding-chameleon.png', name: 'coding-chameleon.png' },
+  { src: '/assets/spider-pet.webp', name: 'hypatia.png' },
+  { src: '/assets/busy-town-spider.webp', name: 'aspasia.png' },
+  { src: '/assets/coding-chameleon.webp', name: 'coding-chameleon.png' },
 ]
 
 const MEDIA_ICONS = [
-  { src: '/assets/boyzine.png', name: 'boyzine.png' },
-  { src: '/assets/boyposter-wip.png', name: 'boyposter (wip).png' },
-  { src: '/assets/thinking-leaf-poster.png', name: '💭🍃 (wip).png' },
-  { src: '/assets/boygame.png', name: 'game (dnf)', href: 'https://www.instagram.com/b0ygame' },
-  { src: '/assets/ao3.png', name: 'clippy.txt', href: 'https://archiveofourown.org/works/51323875' },
-  { src: '/assets/ao3.png', name: 'notes.txt', href: 'https://archiveofourown.org/works/53351767' },
+  { src: '/assets/boyzine.webp', name: 'boyzine.png' },
+  { src: '/assets/boyposter-wip.webp', name: 'boyposter (wip).png' },
+  { src: '/assets/thinking-leaf-poster.webp', name: '💭🍃 (wip).png' },
+  { src: '/assets/boygame.webp', name: 'game (dnf)', href: 'https://www.instagram.com/b0ygame' },
+  { src: '/assets/ao3.webp', name: 'clippy.txt', href: 'https://archiveofourown.org/works/51323875' },
+  { src: '/assets/ao3.webp', name: 'notes.txt', href: 'https://archiveofourown.org/works/53351767' },
 ]
 
 const BACKGROUND_DOODLES = [
@@ -108,7 +108,7 @@ function AutoCroppedImage({ src, alt }) {
   }
 
   if (!bounds) {
-    return <img src={src} alt={alt} draggable="false" onLoad={inspectImage} />
+    return <img src={src} alt={alt} draggable="false" decoding="async" onLoad={inspectImage} />
   }
 
   return (
@@ -125,6 +125,7 @@ function AutoCroppedImage({ src, alt }) {
         src={src}
         alt={alt}
         draggable="false"
+        decoding="async"
         style={{
           width: `${bounds.sourceWidth / bounds.width * 100}%`,
           maxWidth: 'none',
@@ -440,10 +441,8 @@ function CollagePiece({ image }) {
     >
       {image.animatedCutout ? (
         <AutoCroppedImage src={image.src} alt={image.alt} />
-      ) : image.cutout ? (
-        <BackgroundRemovedImage src={image.src} alt={image.alt} aggressive={image.aggressiveCutout} />
       ) : (
-        <AutoCroppedImage src={image.src} alt={image.alt} />
+        <img src={image.src} alt={image.alt} draggable="false" decoding="async" />
       )}
     </div>
   )
@@ -476,7 +475,7 @@ function FinderFile({ item, onSelect, grain = false }) {
   const pngMatch = item.name.match(/^(.*)(\.png)$/i)
   const contents = (
     <>
-      <img className={grain ? 'media-grain' : ''} src={item.src} alt="" draggable="false" />
+      <img className={grain ? 'media-grain' : ''} src={item.src} alt="" draggable="false" loading="lazy" decoding="async" />
       <span className="pic-file-name">
         {pngMatch ? (
           <>{pngMatch[1]}<wbr /><span className="file-extension">{pngMatch[2]}</span></>
@@ -561,6 +560,7 @@ export default function App() {
               <button
                 className={activeCategory === category.name ? 'is-active' : ''}
                 type="button"
+                aria-label={category.name}
                 onClick={() => {
                   setActiveCategory(category.name)
                   setSelectedItem(null)
@@ -572,7 +572,7 @@ export default function App() {
                     <BackgroundRemovedImage src={category.icon} alt={`${category.name} icon`} />
                   )}
                 </span>
-                <span className="category-label">{category.name}</span>
+                <span className="category-label" aria-hidden="true">{category.label}</span>
               </button>
             ))}
           </nav>
@@ -587,6 +587,7 @@ export default function App() {
                     src={selectedItem.src}
                     alt={selectedItem.name}
                     draggable="false"
+                    decoding="async"
                   />
                 </div>
                 <div className="preview-copy">

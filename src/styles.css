@@ -436,6 +436,9 @@ body {
 .panel-content {
   min-height: 0;
   flex: 1;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .pic-file {
@@ -649,6 +652,11 @@ body {
     min-height: max(760px, 100svh);
   }
   .center-stack { top: 51%; width: min(340px, calc(100% - 30px)); gap: 12px; }
+  .index-panel { padding: 12px 8px; }
+  .category-row { gap: 2px; }
+  .category-row button { gap: 6px; font-size: 15px; }
+  .category-icon-slot { width: 46px; height: 46px; }
+  .category-label { padding: 0 2px; }
   .upper-panel { height: 275px; }
   .pics-grid { gap: 20px; padding: 18px; overflow: auto; }
   .pic-file { width: 58px; font-size: 14px; }

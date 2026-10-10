@@ -27,11 +27,11 @@ const COLLAGE_IMAGES = [
 ]
 
 const CATEGORIES = [
-  { name: 'playlists', icon: '/assets/icon-playlists.png' },
+  { name: 'music', icon: '/assets/icon-playlists.png' },
   { name: 'pets', icon: '/assets/icon-pets.png' },
-  { name: 'books', icon: '/assets/icon-books.png' },
+  { name: 'media', icon: '/assets/comp.png' },
   { name: 'pics', icon: '/assets/icon-pics.png' },
-  { name: 'fun facts', icon: '/assets/icon-fun-facts.png' },
+  { name: 'games', icon: '/assets/icon-fun-facts.png' },
 ]
 
 const PIC_ICONS = [
@@ -45,6 +45,15 @@ const PET_ICONS = [
   { src: '/assets/spider-pet.png', name: 'hypatia.png' },
   { src: '/assets/busy-town-spider.png', name: 'aspasia.png' },
   { src: '/assets/coding-chameleon.png', name: 'coding-chameleon.png' },
+]
+
+const MEDIA_ICONS = [
+  { src: '/assets/boyzine.png', name: 'boyzine.png' },
+  { src: '/assets/boyposter-wip.png', name: 'boyposter (wip).png' },
+  { src: '/assets/thinking-leaf-poster.png', name: '💭🍃 (wip).png' },
+  { src: '/assets/boygame.png', name: 'game (dnf)', href: 'https://www.instagram.com/b0ygame' },
+  { src: '/assets/ao3.png', name: 'clippy.txt', href: 'https://archiveofourown.org/works/51323875' },
+  { src: '/assets/ao3.png', name: 'notes.txt', href: 'https://archiveofourown.org/works/53351767' },
 ]
 
 const BACKGROUND_DOODLES = [
@@ -463,17 +472,59 @@ function CrayonAvatar({ className, color, variant }) {
   )
 }
 
+function FinderFile({ item, onSelect, grain = false }) {
+  const pngMatch = item.name.match(/^(.*)(\.png)$/i)
+  const contents = (
+    <>
+      <img className={grain ? 'media-grain' : ''} src={item.src} alt="" draggable="false" />
+      <span className="pic-file-name">
+        {pngMatch ? (
+          <>{pngMatch[1]}<wbr /><span className="file-extension">{pngMatch[2]}</span></>
+        ) : item.name}
+      </span>
+    </>
+  )
+
+  return item.href ? (
+    <a className="pic-file file-button" href={item.href} target="_blank" rel="noreferrer">
+      {contents}
+    </a>
+  ) : (
+    <button className="pic-file file-button" type="button" onClick={() => onSelect(item)}>
+      {contents}
+    </button>
+  )
+}
+
 export default function App() {
-  const [activeCategory, setActiveCategory] = useState('pics')
+  const [activeCategory, setActiveCategory] = useState('media')
   const [selectedItem, setSelectedItem] = useState(null)
   const activeItems = activeCategory === 'pics'
     ? PIC_ICONS
     : activeCategory === 'pets'
       ? PET_ICONS
-      : []
+      : activeCategory === 'media'
+        ? MEDIA_ICONS
+        : []
 
   return (
     <main className="dream-page">
+      <svg className="texture-filters" aria-hidden="true">
+        <filter id="media-grain" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="3" seed="17" result="noise" />
+          <feColorMatrix
+            in="noise"
+            type="matrix"
+            values="1 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    0 0 0 .2 0"
+            result="softNoise"
+          />
+          <feBlend in="SourceGraphic" in2="softNoise" mode="overlay" result="textured" />
+          <feComposite in="textured" in2="SourceGraphic" operator="in" />
+        </filter>
+      </svg>
       <div
         className="top-marquee"
         role="banner"
@@ -482,11 +533,11 @@ export default function App() {
         <div className="marquee-track" aria-hidden="true">
           {Array.from({ length: 4 }, (_, index) => (
             <span className="marquee-copy" key={index}>
-              THE ADVENTURES OF{' '}
+              𝓣𝓗𝓔 𝓐𝓓𝓥𝓔𝓝𝓣𝓤𝓡𝓔𝓢 𝓞𝓕{' '}
               <a className="marquee-leaf" href="https://amandayeh.com/" target="_blank" rel="noreferrer">
                 AGILITY LEAF (叶敏) ↗
               </a>
-              {' '}X{' '}
+              {' '}𝓧{' '}
               <a className="marquee-source" href="https://mellyeliu.online/" target="_blank" rel="noreferrer">
                 THINKING SOURCE (思源) ↗
               </a>
@@ -521,7 +572,7 @@ export default function App() {
                     <BackgroundRemovedImage src={category.icon} alt={`${category.name} icon`} />
                   )}
                 </span>
-                <span>{category.name}</span>
+                <span className="category-label">{category.name}</span>
               </button>
             ))}
           </nav>
@@ -531,24 +582,87 @@ export default function App() {
             {selectedItem ? (
               <div className="file-preview">
                 <div className="preview-image-wrap">
-                  <img src={selectedItem.src} alt={selectedItem.name} draggable="false" />
+                  <img
+                    className={activeCategory === 'media' ? 'media-grain' : ''}
+                    src={selectedItem.src}
+                    alt={selectedItem.name}
+                    draggable="false"
+                  />
                 </div>
                 <div className="preview-copy">
                   <h2>{selectedItem.name}</h2>
                 </div>
               </div>
+            ) : activeCategory === 'music' ? (
+              <div className="music-content">
+                <ul className="music-list">
+                  <li className="playlist-entry">
+                    <a
+                      href="https://open.spotify.com/playlist/48SKfqPLYv9akELVQwieuM?si=cfa0290bc553463c"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      💿 𝓫𝓸𝔂𝓰𝓪𝓶𝓮 𝓹𝓵𝓪𝔂𝓵𝓲𝓼𝓽 ↗ 💿
+                    </a>
+                  </li>
+                  <li className="playlist-entry">
+                    <a
+                      href="https://open.spotify.com/playlist/3D4pRCSuJAOvBxJjEh19ZV?si=9448a362f9bb4b4b"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      💿 𝓼𝓪𝓹𝓹𝓱𝓲𝓬 𝓲𝓷𝓭𝓲𝓮 𝓹𝓸𝓹 ↗ 💿
+                    </a>
+                  </li>
+                  <li className="playlist-entry">
+                    <a
+                      href="https://open.spotify.com/playlist/3w89yqEp7sqJRK8EUnyDyv?si=725027d86e2240fa"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      💿 𝓼𝓵𝓾𝓽 &lt;&gt; 𝓯𝓮𝓶𝓬𝓮𝓵 ↗ 💿
+                    </a>
+                  </li>
+                  <li className="track-entry">
+                    <a
+                      href="https://open.spotify.com/album/7EA0BJIxzjox8bBpMXSvqF?si=ab0YPvPsRzGukGg_NTPMtw"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      🎀 𝓽𝓱𝓮 𝓯𝓮𝓶𝓬𝓮𝓵𝓼 — i have to get hotter 🎀 ↗
+                    </a>
+                  </li>
+                  <li className="track-entry">
+                    <a
+                      href="https://open.spotify.com/album/0mQPq9INcTC48siErksOrl?si=7ZOfJTqVTd21DR7BCHjbVQ"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      🔌 𝓾𝓷𝓭𝓮𝓻𝓼𝓬𝓸𝓻𝓮𝓼 — wallsocket 🔌 ↗
+                    </a>
+                  </li>
+                  <li className="track-entry">
+                    <a
+                      href="https://open.spotify.com/album/6CS7IxjsKQAamJTVWvQWOF?si=SLu4NwjQTiGQUOXAhMsBOQ"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      🫂 𝓑𝓔𝓣𝓦𝓔𝓔𝓝 𝓕𝓡𝓘𝓔𝓝𝓓𝓢 — i love my girl shes my boy 🫂 ↗
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            ) : activeCategory === 'games' ? (
+              <div className="coming-soon">coming soon...</div>
             ) : (
               <div className="pics-grid">
                 {activeItems.map((item) => (
-                  <button
-                    className="pic-file file-button"
-                    type="button"
-                    onClick={() => setSelectedItem(item)}
-                    key={item.src}
-                  >
-                    <img src={item.src} alt="" draggable="false" />
-                    <span className="pic-file-name">{item.name}</span>
-                  </button>
+                  <FinderFile
+                    item={item}
+                    onSelect={setSelectedItem}
+                    grain={activeCategory === 'media'}
+                    key={`${item.src}-${item.name}`}
+                  />
                 ))}
               </div>
             )}

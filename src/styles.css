@@ -84,8 +84,6 @@ body {
 .marquee-source { color: #d7c3ff; }
 .marquee-leaf,
 .marquee-source { text-decoration: none; }
-.marquee-leaf:hover,
-.marquee-source:hover { text-decoration: underline; }
 
 .bottom-marquee {
   position: absolute;
@@ -259,11 +257,11 @@ body {
 }
 .neon-pet { z-index: 9; top: 8%; left: 20%; right: auto; width: clamp(70px, 7vw, 105px); transform: rotate(9deg); }
 .pixel-face { z-index: 9; top: 8%; left: max(2%, 24px); width: clamp(88px, 9vw, 135px); transform: rotate(-7deg); }
-.stars-gif { z-index: 9; top: 25%; left: 13%; width: clamp(60px, 6vw, 90px); transform: rotate(7deg); image-rendering: pixelated; }
+.stars-gif { z-index: 9; top: 31%; left: 15%; width: clamp(60px, 6vw, 90px); transform: rotate(7deg); image-rendering: pixelated; }
 .grey-faerie { z-index: 9; top: 58%; left: max(3%, 28px); width: clamp(72px, 8vw, 118px); transform: rotate(8deg); image-rendering: pixelated; }
 .green-faerie { z-index: 9; top: 26%; left: 19%; width: clamp(64px, 7vw, 105px); transform: rotate(-8deg); image-rendering: pixelated; }
 .winged-heart { z-index: 8; top: 27%; left: max(2%, 24px); width: clamp(90px, 10vw, 145px); transform: rotate(4deg); image-rendering: pixelated; }
-.sprout2-gif { z-index: 8; top: 48%; bottom: auto; left: 10%; width: clamp(58px, 6.5vw, 98px); transform: rotate(-6deg); image-rendering: pixelated; }
+.sprout2-gif { z-index: 13; top: 58%; right: 15%; bottom: auto; left: auto; width: clamp(58px, 6.5vw, 98px); transform: rotate(-6deg); image-rendering: pixelated; }
 .gothorita { z-index: 15; top: 21%; right: 22%; width: clamp(120px, 14vw, 205px); transform: rotate(-7deg); }
 .ralts-tiny { z-index: 9; top: 20%; right: 17%; width: clamp(42px, 4vw, 62px); transform: rotate(9deg); image-rendering: pixelated; }
 .ralts-large { z-index: 15; top: 34%; right: 12%; bottom: auto; left: auto; width: clamp(105px, 12vw, 180px); transform: rotate(6deg); }
@@ -311,7 +309,7 @@ body {
 .upper-panel,
 .index-panel {
   width: 100%;
-  border: 1px solid rgb(47 34 100 / 72%);
+  border: 1.5px solid #2f2264;
   border-radius: 0;
   background: rgb(244 240 255 / 58%);
   box-shadow:
@@ -346,15 +344,15 @@ body {
   flex: 1 1 0;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 9px;
   color: #2f2264;
   border: 0;
   background: transparent;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 400;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Brush Script MT", "Segoe Script", "Apple Chancery", cursive;
   text-align: center;
-  text-decoration: underline;
+  text-decoration: none;
   text-underline-offset: 2px;
   cursor: pointer;
 }
@@ -363,6 +361,14 @@ body {
   width: 66px;
   height: 66px;
   display: block;
+  border-radius: 0;
+  outline: 2px dotted transparent;
+  outline-offset: 3px;
+  transition: outline-color 180ms ease;
+}
+
+.category-row button.is-active .category-icon-slot {
+  outline-color: #2f2264;
 }
 
 .category-icon-slot canvas {
@@ -379,15 +385,41 @@ body {
 
 .index-panel button {
   color: #2f2264;
+  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.index-panel button.is-active { text-decoration: none; }
+
+.index-panel button:hover {
+  color: #2f2264;
+  background: transparent;
+}
+
+.category-label {
+  padding: 0 6px;
+  line-height: 1;
+}
+
+.index-panel button.is-active .category-label {
+  color: #2f2264;
+  background: transparent;
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 }
 
-.index-panel button:hover,
-.index-panel button.is-active {
-  color: #2f2264;
-  background: transparent;
+.texture-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.media-grain {
+  filter: url("#media-grain");
 }
 
 .pics-grid {
@@ -426,6 +458,7 @@ body {
   border: 0;
   background: transparent;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .file-button:hover,
@@ -447,8 +480,11 @@ body {
 .pic-file figcaption,
 .pic-file-name {
   width: 100%;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
 }
+
+.file-extension { white-space: nowrap; }
 
 .file-preview {
   width: 100%;
@@ -457,6 +493,49 @@ body {
   grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
   gap: 25px;
   padding: 26px 30px;
+}
+
+.music-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 38px 58px;
+  color: #2f2264;
+}
+
+.coming-soon {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #2f2264;
+  font-family: "Brush Script MT", "Segoe Script", "Apple Chancery", cursive;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.music-list {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.music-list {
+  margin: 0;
+  padding-left: 28px;
+  list-style: disc;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.music-list li {
+  padding-left: 5px;
+}
+
+.music-list a {
+  color: #2f2264;
+  font-weight: 400;
+  text-decoration: none;
 }
 
 .preview-image-wrap {
@@ -501,7 +580,7 @@ body {
   padding: 6px 12px;
   overflow: hidden;
   color: #2f2264;
-  border-top: 1px solid rgb(47 34 100 / 72%);
+  border-top: 1.5px solid #2f2264;
   background: rgb(255 255 255 / 58%);
   font-family: Arial, Helvetica, sans-serif;
   gap: 8px;
@@ -565,7 +644,10 @@ body {
 
 @media (max-width: 700px) {
   body { overflow: auto; }
-  .dream-page { min-height: 760px; }
+  .dream-page {
+    min-height: 760px;
+    min-height: max(760px, 100svh);
+  }
   .center-stack { top: 51%; width: min(340px, calc(100% - 30px)); gap: 12px; }
   .upper-panel { height: 275px; }
   .pics-grid { gap: 20px; padding: 18px; overflow: auto; }
@@ -581,11 +663,11 @@ body {
   .pepper-oil { top: 35%; right: 5%; left: auto; width: 110px; }
   .neon-pet { top: 20%; right: 2%; width: 68px; }
   .pixel-face { top: 20%; width: 76px; }
-  .stars-gif { top: 27%; left: 12%; width: 58px; }
+  .stars-gif { top: 33%; left: 15%; width: 58px; }
   .grey-faerie { top: 58%; width: 70px; }
   .green-faerie { top: 26%; left: 19%; width: 62px; }
   .winged-heart { top: 29%; width: 82px; }
-  .sprout2-gif { top: 48%; bottom: auto; left: 10%; width: 58px; }
+  .sprout2-gif { top: 59%; right: 17%; bottom: auto; left: auto; width: 58px; }
   .gothorita { top: 23%; right: 24%; left: auto; width: 112px; }
   .ralts-tiny { top: 20%; right: 17%; width: 42px; }
   .ralts-large { top: 36%; right: 12%; bottom: auto; left: auto; width: 92px; }

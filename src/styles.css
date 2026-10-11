@@ -230,21 +230,29 @@ body {
 
 .collage-piece:not(.is-still):hover { animation: wobble 700ms ease-in-out; }
 
-.sign { z-index: 7; top: 12%; left: 8%; width: clamp(100px, 10.5vw, 160px); transform: rotate(-11deg); }
-.activity { z-index: 3; bottom: 2%; left: 12%; width: clamp(220px, 25vw, 375px); transform: rotate(7deg); }
-.sea { z-index: 2; top: 34%; right: 7%; width: clamp(125px, 14vw, 210px); transform: rotate(8deg); }
-.sea-pieces { z-index: 7; top: 6%; right: 22%; left: auto; bottom: auto; width: clamp(125px, 14vw, 210px); transform: rotate(-7deg); }
+.sign { z-index: 7; top: 12%; left: 15%; width: clamp(100px, 10.5vw, 160px); transform: rotate(-11deg); }
+.activity { z-index: 3; bottom: 7%; left: 19%; width: clamp(220px, 25vw, 375px); transform: rotate(7deg); }
+.sea { z-index: 2; top: 73%; right: auto; left: 51%; width: clamp(125px, 14vw, 210px); transform: rotate(8deg); }
+.sea-pieces { z-index: 7; top: 13%; right: auto; left: 46%; bottom: auto; width: clamp(125px, 14vw, 210px); transform: rotate(-7deg); }
 .joker-blue { z-index: 8; top: 34%; left: max(2%, 24px); width: clamp(100px, 11vw, 165px); transform: rotate(13deg); }
-.joker-sketch { z-index: 8; top: 24%; right: 12%; bottom: auto; width: clamp(85px, 9vw, 135px); transform: rotate(-13deg); }
-.advisory { z-index: 8; right: 8%; bottom: 5%; width: clamp(90px, 10vw, 155px); transform: rotate(2deg); }
-.clippy { z-index: 8; top: 38%; left: 18%; width: clamp(125px, 14vw, 205px); transform: rotate(-10deg); }
-.tamagotchi { z-index: 5; top: 4%; right: 7%; width: clamp(125px, 15vw, 225px); transform: rotate(7deg); }
-.thisway-doll { z-index: 6; left: 2%; bottom: 7%; width: clamp(170px, 19vw, 285px); transform: rotate(-8deg); }
-.retro-paint { z-index: 9; right: 5%; top: 15%; bottom: auto; width: clamp(360px, 40vw, 600px); transform: rotate(6deg); }
-.candle-creature { z-index: 7; right: 20%; bottom: 8%; width: clamp(155px, 18vw, 270px); transform: rotate(-9deg); }
+.joker-sketch { z-index: 8; top: 9%; right: auto; left: 63%; bottom: auto; width: clamp(85px, 9vw, 135px); transform: rotate(-13deg); }
+.advisory { z-index: 8; right: 8%; bottom: 8%; width: clamp(90px, 10vw, 155px); transform: rotate(2deg); }
+.clippy { z-index: 8; top: 40%; left: 19%; width: clamp(125px, 14vw, 205px); transform: rotate(-10deg); }
+.tamagotchi { z-index: 5; top: 7%; right: 8%; width: clamp(125px, 15vw, 225px); transform: rotate(7deg); }
+.thisway-doll { z-index: 6; top: 63%; left: 4%; bottom: auto; width: clamp(170px, 19vw, 285px); transform: rotate(-8deg); }
+.retro-paint {
+  z-index: 9;
+  right: auto;
+  left: 71%;
+  top: 33%;
+  bottom: auto;
+  width: clamp(124px, 13.73vw, 206px);
+  transform: rotate(6deg);
+}
+.candle-creature { z-index: 7; top: 57%; right: auto; bottom: auto; left: 67%; width: clamp(155px, 18vw, 270px); transform: rotate(-9deg); }
 .pepper-oil {
   z-index: 12;
-  top: 35%;
+  top: 34%;
   right: 5%;
   left: auto;
   bottom: auto;
@@ -255,16 +263,18 @@ body {
     drop-shadow(0 0 19px rgb(150 255 196 / 48%))
     drop-shadow(4px 6px 2px rgb(10 4 24 / 48%));
 }
-.neon-pet { z-index: 9; top: 8%; left: 20%; right: auto; width: clamp(70px, 7vw, 105px); transform: rotate(9deg); }
+.neon-pet { z-index: 9; top: 9%; left: 33.5%; right: auto; width: clamp(70px, 7vw, 105px); transform: rotate(9deg); }
 .pixel-face { z-index: 9; top: 8%; left: max(2%, 24px); width: clamp(88px, 9vw, 135px); transform: rotate(-7deg); }
-.stars-gif { z-index: 9; top: 31%; left: 15%; width: clamp(60px, 6vw, 90px); transform: rotate(7deg); image-rendering: pixelated; }
+.stars-gif { z-index: 9; top: 82%; left: 44%; width: clamp(60px, 6vw, 90px); transform: rotate(7deg); image-rendering: pixelated; }
 .grey-faerie { z-index: 9; top: 58%; left: max(3%, 28px); width: clamp(72px, 8vw, 118px); transform: rotate(8deg); image-rendering: pixelated; }
-.green-faerie { z-index: 9; top: 26%; left: 19%; width: clamp(64px, 7vw, 105px); transform: rotate(-8deg); image-rendering: pixelated; }
-.winged-heart { z-index: 8; top: 27%; left: max(2%, 24px); width: clamp(90px, 10vw, 145px); transform: rotate(4deg); image-rendering: pixelated; }
-.sprout2-gif { z-index: 13; top: 58%; right: 15%; bottom: auto; left: auto; width: clamp(58px, 6.5vw, 98px); transform: rotate(-6deg); image-rendering: pixelated; }
-.gothorita { z-index: 15; top: 21%; right: 22%; width: clamp(120px, 14vw, 205px); transform: rotate(-7deg); }
-.ralts-tiny { z-index: 9; top: 20%; right: 17%; width: clamp(42px, 4vw, 62px); transform: rotate(9deg); image-rendering: pixelated; }
-.ralts-large { z-index: 15; top: 34%; right: 12%; bottom: auto; left: auto; width: clamp(105px, 12vw, 180px); transform: rotate(6deg); }
+.green-faerie { z-index: 9; top: 18%; left: 25.5%; width: clamp(64px, 7vw, 105px); transform: rotate(-8deg); image-rendering: pixelated; }
+.winged-heart { z-index: 8; top: 26%; left: max(2%, 24px); width: clamp(90px, 10vw, 145px); transform: rotate(4deg); image-rendering: pixelated; }
+.sprout2-gif { z-index: 13; top: 84%; right: auto; bottom: auto; left: 57%; width: clamp(58px, 6.5vw, 98px); transform: rotate(-6deg); image-rendering: pixelated; }
+.gothorita { z-index: 15; top: 22%; right: 22%; width: clamp(120px, 14vw, 205px); transform: rotate(-7deg); }
+.ralts-tiny { z-index: 9; top: 19%; right: 17%; width: clamp(50px, 5vw, 76px); transform: rotate(9deg); image-rendering: pixelated; }
+.ralts-large { z-index: 15; top: 40%; right: 12%; bottom: auto; left: auto; width: clamp(105px, 12vw, 180px); transform: rotate(6deg); }
+.lego-friends { z-index: 11; top: 46%; left: 11%; width: clamp(90px, 9vw, 140px); transform: rotate(-4deg); }
+.gameboy-color { z-index: 9; top: 9%; left: 33.5%; width: clamp(60px, 6.5vw, 95px); transform: rotate(10deg); }
 
 .spider-long {
   z-index: 8; top: 48%; left: 14%; width: clamp(215px, 24vw, 360px); height: clamp(112px, 13vw, 188px);
@@ -586,8 +596,8 @@ body {
   overscroll-behavior-inline: contain;
   -webkit-overflow-scrolling: touch;
   color: #2f2264;
-  border-top: 1.5px solid #2f2264;
-  background: rgb(255 255 255 / 58%);
+  border-top: 0;
+  background: transparent;
   font-family: Arial, Helvetica, sans-serif;
   gap: 8px;
   font-size: 13px;
@@ -654,40 +664,51 @@ body {
   to { transform: translateX(-25%); }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   body { overflow: auto; }
   .dream-page {
     min-height: 760px;
     min-height: max(760px, 100svh);
   }
-  .center-stack { top: 51%; width: min(340px, calc(100% - 30px)); gap: 12px; }
-  .index-panel { padding: 12px 8px; }
-  .category-row { gap: 2px; }
+  .center-stack { top: 51%; width: min(680px, calc(100% - 16px)); gap: 12px; }
+  .index-panel { padding: 12px 0; }
+  .category-row { gap: 0; }
   .category-row button { gap: 6px; font-size: 15px; }
   .category-icon-slot { width: 46px; height: 46px; }
-  .category-label { padding: 0 2px; }
+  .category-label { padding: 0; }
   .upper-panel { height: 275px; }
-  .pics-grid { gap: 20px; padding: 18px; overflow: auto; }
+  .pics-grid { gap: 20px; padding: 0; overflow: auto; }
+  .file-preview { padding: 0; }
+  .music-content { padding-right: 0; padding-left: 0; }
+  .finder-path { padding-right: 0; padding-left: 0; gap: 4px; }
   .pic-file { width: 58px; font-size: 14px; }
   .pic-file img { height: 58px; max-width: 50px; }
-  .activity { width: 235px; }
-  .sea { width: 145px; }
-  .sea-pieces { left: 29%; bottom: 3%; width: 115px; }
-  .tamagotchi { right: 2%; width: 125px; }
-  .thisway-doll { left: 14%; width: 180px; }
-  .retro-paint { top: 17%; right: 5%; bottom: auto; width: 300px; }
-  .candle-creature { right: 24%; bottom: 0; width: 145px; }
-  .pepper-oil { top: 35%; right: 5%; left: auto; width: 110px; }
-  .neon-pet { top: 20%; right: 2%; width: 68px; }
-  .pixel-face { top: 20%; width: 76px; }
-  .stars-gif { top: 33%; left: 15%; width: 58px; }
-  .grey-faerie { top: 58%; width: 70px; }
-  .green-faerie { top: 26%; left: 19%; width: 62px; }
-  .winged-heart { top: 29%; width: 82px; }
-  .sprout2-gif { top: 59%; right: 17%; bottom: auto; left: auto; width: 58px; }
-  .gothorita { top: 23%; right: 24%; left: auto; width: 112px; }
-  .ralts-tiny { top: 20%; right: 17%; width: 42px; }
-  .ralts-large { top: 36%; right: 12%; bottom: auto; left: auto; width: 92px; }
+  .collage-piece { scale: 0.76; }
+  .sign { top: 14%; left: 3%; width: 110px; }
+  .activity { right: auto; bottom: 4%; left: 12%; width: 190px; }
+  .sea { top: 75%; right: auto; left: 52%; width: 140px; }
+  .sea-pieces { top: 12%; right: auto; bottom: auto; left: 48%; width: 100px; }
+  .joker-blue { top: 34%; left: 1%; width: 85px; }
+  .joker-sketch { top: 13%; right: 3%; bottom: auto; left: auto; width: 72px; }
+  .advisory { right: 2%; bottom: 4%; width: 75px; }
+  .clippy { top: 43%; left: 13%; width: 105px; }
+  .tamagotchi { top: 5%; right: 1%; width: 100px; }
+  .thisway-doll { top: 63%; left: 1%; width: 145px; }
+  .retro-paint { top: 34%; right: 4%; bottom: auto; left: auto; width: 92px; }
+  .candle-creature { top: 65%; right: 11%; bottom: auto; left: auto; width: 115px; }
+  .pepper-oil { top: 47%; right: 2%; left: auto; width: 90px; }
+  .neon-pet { top: 8%; right: auto; left: 31%; width: 62px; }
+  .pixel-face { top: 7%; left: 2%; width: 66px; }
+  .stars-gif { top: 80%; left: 42%; width: 55px; }
+  .grey-faerie { top: 57%; left: 2%; width: 64px; }
+  .green-faerie { top: 18%; left: 23%; width: 58px; }
+  .winged-heart { top: 27%; left: 2%; width: 68px; }
+  .sprout2-gif { top: 83%; right: auto; bottom: auto; left: 57%; width: 55px; }
+  .gothorita { top: 25%; right: 24%; left: auto; width: 105px; }
+  .ralts-tiny { top: 20%; right: 11%; width: 52px; }
+  .ralts-large { top: 43%; right: 2%; bottom: auto; left: auto; width: 74px; }
+  .lego-friends { top: 48%; left: 8%; width: 78px; }
+  .gameboy-color { top: 8%; left: 31%; width: 58px; }
   .avatar-doodle { width: 96px; }
   .avatar-green { left: 32%; }
   .avatar-purple { left: 51%; }

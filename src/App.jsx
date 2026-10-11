@@ -11,10 +11,9 @@ const COLLAGE_IMAGES = [
   { src: '/assets/clippy.webp', alt: 'Clippy', className: 'clippy' },
   { src: '/assets/tamagotchi-pink.webp', alt: 'Pink virtual pet', className: 'tamagotchi' },
   { src: '/assets/thisway-doll.webp', alt: 'Thisway doll', className: 'thisway-doll' },
-  { src: '/assets/retro-paint.webp', alt: 'Retro Paint window', className: 'retro-paint', cutout: true },
+  { src: '/assets/retro-paint.webp', alt: 'Retro Paint window', className: 'retro-paint', trimTransparentBox: true },
   { src: '/assets/candle-creature.webp', alt: 'Candle creature', className: 'candle-creature' },
   { src: '/assets/pepper-oil.webp', alt: 'Pepper oil bottle', className: 'pepper-oil' },
-  { src: '/assets/neon-pet.webp', alt: 'Neon virtual pet', className: 'neon-pet' },
   { src: '/assets/pixel-face.webp', alt: 'Pixel-art face', className: 'pixel-face' },
   { src: '/assets/stars.gif', alt: 'Animated green star', className: 'stars-gif' },
   { src: '/assets/Gothorita.webp', alt: 'Gothorita', className: 'gothorita' },
@@ -24,6 +23,8 @@ const COLLAGE_IMAGES = [
   { src: '/assets/ralts2.gif', alt: 'Animated tiny Ralts', className: 'ralts-tiny' },
   { src: '/assets/raltss.webp', alt: 'Ralts', className: 'ralts-large', cutout: true },
   { src: '/assets/sprout2.gif', alt: 'Animated sprout', className: 'sprout2-gif', animatedCutout: true },
+  { src: '/assets/lego-friends.png', alt: 'Lego flower friends', className: 'lego-friends' },
+  { src: '/assets/gameboy-color.png', alt: 'Pink Game Boy Color', className: 'gameboy-color', trimTransparentBox: true },
 ]
 
 const CATEGORIES = [
@@ -52,9 +53,22 @@ const MEDIA_ICONS = [
   { src: '/assets/boyposter-wip.webp', name: 'boyposter (wip).png' },
   { src: '/assets/thinking-leaf-poster.webp', name: '💭🍃 (wip).png' },
   { src: '/assets/boygame.webp', name: 'game (dnf)', href: 'https://www.instagram.com/b0ygame' },
-  { src: '/assets/ao3.webp', name: 'clippy.txt', href: 'https://archiveofourown.org/works/51323875' },
-  { src: '/assets/ao3.webp', name: 'notes.txt', href: 'https://archiveofourown.org/works/53351767' },
+  { src: '/assets/ao3-fanfic-v2.png', name: 'clippy.txt', href: 'https://archiveofourown.org/works/51323875' },
+  { src: '/assets/ao3-fanfic-v2.png', name: 'notes.txt', href: 'https://archiveofourown.org/works/53351767' },
 ]
+
+function toFancyGlyphs(value) {
+  return Array.from(value, (character) => {
+    const codePoint = character.codePointAt(0)
+    if (codePoint >= 65 && codePoint <= 90) {
+      return String.fromCodePoint(0x1d4d0 + codePoint - 65)
+    }
+    if (codePoint >= 97 && codePoint <= 122) {
+      return String.fromCodePoint(0x1d4ea + codePoint - 97)
+    }
+    return character
+  }).join('')
+}
 
 const BACKGROUND_DOODLES = [
   { src: '/assets/doodle-bunnies.png', alt: 'Bunny doodles', className: 'doodle-bunnies' },
@@ -93,7 +107,7 @@ function findVisibleBounds(data, width, height) {
       }
 }
 
-function AutoCroppedImage({ src, alt }) {
+function AutoCroppedImage({ src, alt, fillCrop = false }) {
   const [bounds, setBounds] = useState(null)
 
   const inspectImage = (event) => {
@@ -116,9 +130,9 @@ function AutoCroppedImage({ src, alt }) {
       className="auto-crop"
       style={{
         aspectRatio: `${bounds.width} / ${bounds.height}`,
-        width: `${bounds.width / bounds.sourceWidth * 100}%`,
-        marginLeft: `${bounds.x / bounds.sourceWidth * 100}%`,
-        marginTop: `${bounds.y / bounds.sourceWidth * 100}%`,
+        width: fillCrop ? '100%' : `${bounds.width / bounds.sourceWidth * 100}%`,
+        marginLeft: fillCrop ? '0' : `${bounds.x / bounds.sourceWidth * 100}%`,
+        marginTop: fillCrop ? '0' : `${bounds.y / bounds.sourceWidth * 100}%`,
       }}
     >
       <img
@@ -439,7 +453,9 @@ function CollagePiece({ image }) {
       onPointerUp={finishDrag}
       onPointerCancel={finishDrag}
     >
-      {image.animatedCutout ? (
+      {image.trimTransparentBox ? (
+        <AutoCroppedImage src={image.src} alt={image.alt} fillCrop />
+      ) : image.animatedCutout ? (
         <AutoCroppedImage src={image.src} alt={image.alt} />
       ) : (
         <img src={image.src} alt={image.alt} draggable="false" decoding="async" />
@@ -549,8 +565,6 @@ export default function App() {
       </div>
       <div className="collage" aria-label="Thinking Leaf image collage">
         {COLLAGE_IMAGES.map((image) => <CollagePiece image={image} key={image.className} />)}
-        <CrayonAvatar className="avatar-green" color="#16896b" variant="winged" />
-        <CrayonAvatar className="avatar-purple" color="#6943a5" variant="round" />
       </div>
 
       <div className="center-stack">
@@ -670,24 +684,20 @@ export default function App() {
           </div>
           <div className="finder-path" aria-label="Current Finder path">
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
-              <span className="finder-folder" aria-hidden="true">💻</span>This PC
+              <span className="finder-folder" aria-hidden="true">📁</span>{toFancyGlyphs('Local Disk (C:)')}
             </button>
             <span className="path-divider" aria-hidden="true">&gt;</span>
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
-              <span className="finder-folder" aria-hidden="true">💾</span>Local Disk (C:)
+              <span className="finder-folder" aria-hidden="true">📁</span>{toFancyGlyphs('thinking-leaf')}
             </button>
             <span className="path-divider" aria-hidden="true">&gt;</span>
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
-              <span className="finder-folder" aria-hidden="true">📁</span>thinking-leaf
-            </button>
-            <span className="path-divider" aria-hidden="true">&gt;</span>
-            <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
-              <span className="finder-folder" aria-hidden="true">📁</span>{activeCategory}
+              <span className="finder-folder" aria-hidden="true">📁</span>{toFancyGlyphs(activeCategory)}
             </button>
             {selectedItem && (
               <>
                 <span className="path-divider" aria-hidden="true">&gt;</span>
-                <span className="path-file">🖼️{selectedItem.name}</span>
+                <span className="path-file">🖼️{toFancyGlyphs(selectedItem.name)}</span>
               </>
             )}
           </div>

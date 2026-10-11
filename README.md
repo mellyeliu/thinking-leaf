@@ -1,1 +1,1 @@
-[~ site 💭🍃 ~](https://thinking-leaf.netlify.app/)
+[~ site 💭🍃 ~](https://thinkingleaf.space/)

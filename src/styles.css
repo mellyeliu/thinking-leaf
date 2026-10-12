@@ -913,8 +913,8 @@ body::after {
 
 @keyframes sparkle-twinkle {
   0%, 100% { opacity: 0.22; transform: scale(0.55) rotate(0deg); }
-  45% { opacity: 1; transform: scale(1.15) rotate(24deg); }
-  70% { opacity: 0.55; transform: scale(0.8) rotate(42deg); }
+  45% { opacity: var(--star-peak, 0.75); transform: scale(1.15) rotate(24deg); }
+  70% { opacity: 0.45; transform: scale(0.8) rotate(42deg); }
 }
 
 @keyframes marquee-scroll {

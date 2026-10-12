@@ -858,7 +858,14 @@ export default function App() {
       </div>
       <div className="sparkle-field" aria-hidden="true">
         {Array.from({ length: 22 }, (_, index) => (
-          <i key={index}>
+          <i
+            key={index}
+            style={{
+              animationDuration: `${2.8 + (index * 13 % 21) * 0.17}s`,
+              animationDelay: `${-(index * 1.618 % 8.2)}s`,
+              '--star-peak': 0.5 + (index * 7 % 9) * 0.03,
+            }}
+          >
             <svg viewBox="0 0 40 40" focusable="false">
               <path d="M20 0C21.3 16.8 23.2 18.7 40 20C23.2 21.3 21.3 23.2 20 40C18.7 23.2 16.8 21.3 0 20C16.8 18.7 18.7 16.8 20 0Z" />
             </svg>

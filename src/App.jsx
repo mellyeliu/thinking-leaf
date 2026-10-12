@@ -9,10 +9,10 @@ const COLLAGE_IMAGES = [
   { src: '/assets/joker-sketch.webp', alt: 'Joker sketch', className: 'joker-sketch', hoverText: 'recovering balatro addicts' },
   { src: '/assets/patriarchy-advisory.webp', alt: 'Patriarchy advisory', className: 'advisory', still: true, hoverText: 'slut <> femcel <> ace superposition' },
   { src: '/assets/clippy.webp', alt: 'Clippy', className: 'clippy', hoverText: "clippy's pliable little body\u00a0📎💘" },
-  { src: '/assets/tamagotchi-pink.webp', alt: 'Pink virtual pet', className: 'tamagotchi', hoverText: 'He lives in a space egg and with the right care he will transform into a virtual BOY.' },
+  { src: '/assets/tamagotchi-pink.webp', alt: 'Pink virtual pet', className: 'tamagotchi', hoverText: 'He lives in a space egg and\nwith the right care he will\ntransform into a virtual BOY.' },
   { src: '/assets/thisway-doll.webp', alt: 'Clown Skullpanda doll', className: 'thisway-doll', hoverText: 'unwanted clown skullpanda' },
   { src: '/assets/retro-paint.webp', alt: 'Retro Paint window', className: 'retro-paint', trimTransparentBox: true, hoverText: 'ms paint mirror!' },
-  { src: '/assets/candle-creature.webp', alt: 'Candle Skullpanda', className: 'candle-creature', hoverText: 'went to pmall over thanksgiving and came back with $200 worth of blind boxes' },
+  { src: '/assets/candle-creature.webp', alt: 'Candle Skullpanda', className: 'candle-creature', hoverText: 'went to pmall over thanksgiving\nand came back with $200 worth\nof blind boxes' },
   { src: '/assets/pepper-oil.webp', alt: 'Pepper oil bottle', className: 'pepper-oil', hoverText: 'Who Will Sponsor Our 花椒油 Keychain Merch Idea?' },
   { src: '/assets/pixel-face.webp', alt: 'Pixel-art face', className: 'pixel-face', hoverText: 'pixel face' },
   { src: '/assets/stars.gif', alt: 'Animated green star', className: 'stars-gif' },
@@ -510,6 +510,8 @@ function CollagePiece({ image, onHoverContext, isContextActive }) {
   return (
     <div
       className={`collage-piece ${image.className} ${image.still ? 'is-still' : ''} ${isDragging ? 'is-dragging' : ''} ${isContextActive ? 'is-context-active' : ''}`}
+      data-item-tooltip={image.hoverText || undefined}
+      data-tooltip-lines={['tamagotchi', 'candle-creature'].includes(image.className) ? '3' : undefined}
       style={draggedStyle}
       onPointerDown={handlePointerDown}
       onPointerEnter={handlePointerEnter}
@@ -597,6 +599,100 @@ function FinderFile({ item, onSelect, onHoverContext, grain = false }) {
   )
 }
 
+function AllItemTooltips() {
+  const layerRef = useRef(null)
+
+  useEffect(() => {
+    const layer = layerRef.current
+    let frame
+    let lastLayout = -Infinity
+    const labels = new Map()
+    const positionLabels = (time = 0) => {
+      if (time - lastLayout < 100) {
+        frame = requestAnimationFrame(positionLabels)
+        return
+      }
+      lastLayout = time
+      const anchors = new Set(document.querySelectorAll('[data-item-tooltip]'))
+      const panel = document.querySelector('.center-stack')?.getBoundingClientRect()
+      const occupied = []
+      for (const [anchor, label] of labels) {
+        if (!anchors.has(anchor)) {
+          label.remove()
+          labels.delete(anchor)
+        }
+      }
+      for (const anchor of anchors) {
+        let label = labels.get(anchor)
+        if (!label) {
+          label = document.createElement('span')
+          label.className = 'always-tooltip'
+          if (anchor.dataset.tooltipLines) label.dataset.lines = anchor.dataset.tooltipLines
+          const copy = document.createElement('span')
+          copy.className = 'always-tooltip-copy'
+          copy.textContent = toFancyGlyphs(anchor.dataset.itemTooltip)
+          label.appendChild(copy)
+          label.setAttribute('aria-label', anchor.dataset.itemTooltip)
+          layer.appendChild(label)
+          labels.set(anchor, label)
+        }
+        const bounds = anchor.getBoundingClientRect()
+        const width = label.offsetWidth
+        const height = label.offsetHeight
+        const clampPosition = ([x, y]) => [
+          Math.max(8, Math.min(x, window.innerWidth - width - 8)),
+          Math.max(36, Math.min(y, window.innerHeight - height - 36)),
+        ]
+        const preferred = clampPosition([bounds.left + bounds.width * 0.55, bounds.top + bounds.height * 0.2])
+        const overlapsPanel = ([x, y]) => panel &&
+          x < panel.right + 8 && x + width > panel.left - 8 &&
+          y < panel.bottom + 8 && y + height > panel.top - 8
+        const fits = ([x, y]) => !overlapsPanel([x, y]) && !occupied.some((rect) =>
+          x < rect.right + 12 && x + width > rect.left - 12 &&
+          y < rect.bottom + 12 && y + height > rect.top - 12)
+        const candidates = [preferred]
+        if (panel) candidates.push(
+          [panel.left - width - 12, preferred[1]],
+          [panel.right + 12, preferred[1]],
+          [preferred[0], panel.top - height - 12],
+          [preferred[0], panel.bottom + 12],
+        )
+        for (const rect of occupied) {
+          candidates.push(
+            [rect.left, rect.top - height - 12],
+            [rect.left, rect.bottom + 12],
+            [rect.left - width - 12, rect.top],
+            [rect.right + 12, rect.top],
+          )
+        }
+        let available = candidates.map(clampPosition).filter(fits)
+        if (!available.length) {
+          for (let y = 36; y <= window.innerHeight - height - 36; y += 16) {
+            for (let x = 8; x <= window.innerWidth - width - 8; x += 16) {
+              if (fits([x, y])) available.push([x, y])
+            }
+          }
+        }
+        available.sort((a, b) =>
+          Math.hypot(a[0] - preferred[0], a[1] - preferred[1]) -
+          Math.hypot(b[0] - preferred[0], b[1] - preferred[1]))
+        const [left, top] = available[0] || preferred
+        label.style.visibility = available.length ? 'visible' : 'hidden'
+        if (available.length) occupied.push({ left, top, right: left + width, bottom: top + height })
+        label.style.transform = `translate(${left}px, ${top}px)`
+      }
+      frame = requestAnimationFrame(positionLabels)
+    }
+    positionLabels()
+    return () => {
+      cancelAnimationFrame(frame)
+      layer.replaceChildren()
+    }
+  }, [])
+
+  return <div className="all-tooltips-layer" ref={layerRef} />
+}
+
 function CursorContext({ context }) {
   const fancyText = toFancyGlyphs(context.text)
   const characters = Array.from(fancyText)
@@ -635,6 +731,24 @@ function CursorContext({ context }) {
         top = context.y - bounds.height - gap
       }
 
+      const panel = document.querySelector('.center-stack')?.getBoundingClientRect()
+      const overlapsPanel = (x, y) => panel &&
+        x < panel.right + gap && x + bounds.width > panel.left - gap &&
+        y < panel.bottom + gap && y + bounds.height > panel.top - gap
+      if (overlapsPanel(left, top)) {
+        const candidates = [
+          [panel.left - bounds.width - gap, top],
+          [panel.right + gap, top],
+          [left, panel.top - bounds.height - gap],
+          [left, panel.bottom + gap],
+        ].map(([x, y]) => [
+          Math.max(viewportPadding, Math.min(x, window.innerWidth - bounds.width - viewportPadding)),
+          Math.max(viewportPadding, Math.min(y, window.innerHeight - bounds.height - viewportPadding)),
+        ]).filter(([x, y]) => !overlapsPanel(x, y))
+        candidates.sort((a, b) => Math.hypot(a[0] - left, a[1] - top) - Math.hypot(b[0] - left, b[1] - top))
+        if (candidates.length) [left, top] = candidates[0]
+      }
+
       setPosition({
         left: Math.max(viewportPadding, Math.min(left, window.innerWidth - bounds.width - viewportPadding)),
         top: Math.max(viewportPadding, Math.min(top, window.innerHeight - bounds.height - viewportPadding)),
@@ -649,7 +763,7 @@ function CursorContext({ context }) {
   return (
     <>
       <div
-        className="cursor-context"
+        className={`cursor-context${['tamagotchi', 'candle-creature'].includes(context.source) ? ' has-three-lines' : ''}`}
         role="tooltip"
         aria-label={context.text}
         style={position}
@@ -658,7 +772,7 @@ function CursorContext({ context }) {
           {characters.slice(0, visibleCharacters).join('')}
         </span>
       </div>
-      <div className="cursor-context cursor-context-measure" ref={measureRef} aria-hidden="true">
+      <div className={`cursor-context cursor-context-measure${['tamagotchi', 'candle-creature'].includes(context.source) ? ' has-three-lines' : ''}`} ref={measureRef} aria-hidden="true">
         <span className="cursor-context-copy">{fancyText}</span>
       </div>
     </>
@@ -666,6 +780,7 @@ function CursorContext({ context }) {
 }
 
 export default function App() {
+  const [showAllTooltips, setShowAllTooltips] = useState(false)
   const [background, setBackground] = useState('clouds')
   const backgrounds = ['clouds', 'stars']
   const nextBackground = backgrounds[(backgrounds.indexOf(background) + 1) % backgrounds.length]
@@ -696,6 +811,14 @@ export default function App() {
         onClick={() => setBackground(nextBackground)}
       >
         <span aria-hidden="true">✦ {toFancyGlyphs(background)} ↻</span>
+      </button>
+      <button
+        className="tooltips-toggle background-toggle"
+        type="button"
+        aria-pressed={showAllTooltips}
+        onClick={() => setShowAllTooltips((current) => !current)}
+      >
+        {toFancyGlyphs(showAllTooltips ? 'hide tooltips' : 'show tooltips')}
       </button>
       <svg className="texture-filters" aria-hidden="true">
         <filter id="media-grain" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
@@ -746,7 +869,8 @@ export default function App() {
           />
         ))}
       </div>
-      {hoverContext && (
+      {showAllTooltips && <AllItemTooltips />}
+      {!showAllTooltips && hoverContext && (
         <CursorContext context={hoverContext} />
       )}
 

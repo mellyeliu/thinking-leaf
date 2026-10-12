@@ -121,6 +121,40 @@ body {
   outline-offset: 3px;
 }
 
+.tooltips-toggle { top: 42px; right: 105px; }
+
+.all-tooltips-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 30000;
+  pointer-events: none;
+}
+
+.always-tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(27ch, calc(100vw - 16px));
+  color: #fff;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.always-tooltip-copy {
+  padding: 3px 4px 4px;
+  background: #000;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.always-tooltip[data-lines='3'],
+.cursor-context.has-three-lines {
+  max-width: calc(100vw - 16px);
+  white-space: pre;
+}
+
 .collage-piece:hover,
 .collage-piece.is-context-active {
   filter:
@@ -366,7 +400,7 @@ body {
 
 .cursor-context-copy {
   padding: 3px 4px 4px;
-  background: #2f2264;
+  background: #000;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
@@ -913,12 +947,7 @@ body {
   .avatar-green { left: 32%; }
   .avatar-purple { left: 51%; }
   .cursor-context:not(.cursor-context-measure) {
-    top: auto !important;
-    right: auto;
-    bottom: 44px;
-    left: 50% !important;
     text-align: center;
-    translate: -50% 0;
   }
 }
 

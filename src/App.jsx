@@ -14,7 +14,7 @@ const COLLAGE_IMAGES = [
   { src: '/assets/retro-paint.webp', alt: 'Retro Paint window', className: 'retro-paint', trimTransparentBox: true, hoverText: 'ms paint mirror!' },
   { src: '/assets/candle-creature.webp', alt: 'Candle Skullpanda', className: 'candle-creature', hoverText: 'went to pmall over thanksgiving\nand came back with $200 worth\nof blind boxes' },
   { src: '/assets/pepper-oil.webp', alt: 'Pepper oil bottle', className: 'pepper-oil', hoverText: 'Who Will Sponsor Our 花椒油 Keychain Merch Idea?' },
-  { src: '/assets/pixel-face.webp', alt: 'Pixel-art face', className: 'pixel-face', hoverText: 'pixel face' },
+  { src: '/assets/pixel-face.webp', alt: 'Pixel-art face', className: 'pixel-face' },
   { src: '/assets/stars.gif', alt: 'Animated green star', className: 'stars-gif' },
   { src: '/assets/Gothorita.webp', alt: 'Gothorita', className: 'gothorita', hoverText: 'gothorita\u00a0🖤🔮' },
   { src: '/assets/greyfaerie.gif', alt: 'Animated grey faerie', className: 'grey-faerie', animatedCutout: true, hoverText: 'grey faerie' },
@@ -33,6 +33,13 @@ const CATEGORIES = [
   { name: 'media', label: '𝓶𝓮𝓭𝓲𝓪', icon: '/assets/comp.webp' },
   { name: 'pics', label: '𝓹𝓲𝓬𝓼', icon: '/assets/icon-pics.webp' },
   { name: 'games', label: '𝓰𝓪𝓶𝓮𝓼', icon: '/assets/icon-fun-facts.webp' },
+]
+
+const MOBILE_COLLAGE_POSITIONS = [
+  [8, 4], [43, 6], [78, 2], [23, 19], [64, 17], [91, 27],
+  [7, 32], [42, 29], [75, 40], [23, 44], [52, 49], [90, 54],
+  [8, 57], [35, 62], [70, 63], [17, 73], [48, 76], [90, 74],
+  [7, 87], [30, 94], [65, 85], [90, 96], [49, 98], [61, 32],
 ]
 
 const PIC_ICONS = [
@@ -395,7 +402,7 @@ function AnimatedBackgroundRemovedImage({ src, alt }) {
   return <canvas ref={canvasRef} role="img" aria-label={alt} />
 }
 
-function CollagePiece({ image, onHoverContext, isContextActive }) {
+function CollagePiece({ image, index, onHoverContext, isContextActive }) {
   const [position, setPosition] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
   const [zIndex, setZIndex] = useState(null)
@@ -448,6 +455,7 @@ function CollagePiece({ image, onHoverContext, isContextActive }) {
 
   const handlePointerDown = (event) => {
     if (event.button !== undefined && event.button !== 0) return
+    updateHoverContext(event)
     const element = event.currentTarget
     element.setPointerCapture(event.pointerId)
     dragRef.current = {
@@ -465,7 +473,7 @@ function CollagePiece({ image, onHoverContext, isContextActive }) {
   }
 
   const handlePointerMove = (event) => {
-    if (event.pointerType !== 'touch') updateHoverContext(event)
+    if (event.pointerType !== 'touch' || dragRef.current) updateHoverContext(event)
     const drag = dragRef.current
     if (!drag || drag.pointerId !== event.pointerId) return
 
@@ -485,14 +493,8 @@ function CollagePiece({ image, onHoverContext, isContextActive }) {
     dragRef.current = null
     setIsDragging(false)
 
-    if (event.pointerType === 'touch' && !drag.moved && image.hoverText) {
-      const nextContext = {
-        text: image.hoverText,
-        x: event.clientX,
-        y: event.clientY,
-        source: image.className,
-      }
-      onHoverContext((current) => current?.source === image.className ? null : nextContext)
+    if (event.pointerType === 'touch' && image.hoverText) {
+      updateHoverContext(event)
     }
 
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
@@ -501,6 +503,8 @@ function CollagePiece({ image, onHoverContext, isContextActive }) {
   }
 
   const draggedStyle = {
+    '--mobile-x': `${MOBILE_COLLAGE_POSITIONS[index][0]}%`,
+    '--mobile-y': `calc(${MOBILE_COLLAGE_POSITIONS[index][1]}% + ${82 - MOBILE_COLLAGE_POSITIONS[index][1] * 1.4}px)`,
     ...(position
       ? { left: `${position.left}px`, top: `${position.top}px`, right: 'auto', bottom: 'auto' }
       : {}),
@@ -554,7 +558,7 @@ function CrayonAvatar({ className, color, variant }) {
   )
 }
 
-function FinderFile({ item, onSelect, onHoverContext, grain = false }) {
+function FinderFile({ item, onSelect, onHoverContext, grain = false, focused = false }) {
   const showContext = (event) => {
     if (!item.hoverText) return
     const bounds = event.currentTarget.getBoundingClientRect()
@@ -578,12 +582,12 @@ function FinderFile({ item, onSelect, onHoverContext, grain = false }) {
   )
 
   return item.href ? (
-    <a className="pic-file file-button" href={item.href} target="_blank" rel="noreferrer" aria-label={item.name}>
+    <a className={`pic-file file-button${focused ? ' is-control-focused' : ''}`} href={item.href} target="_blank" rel="noreferrer" aria-label={item.name}>
       {contents}
     </a>
   ) : (
     <button
-      className={`pic-file file-button${item.unavailable ? ' is-unavailable' : ''}`}
+      className={`pic-file file-button${item.unavailable ? ' is-unavailable' : ''}${focused ? ' is-control-focused' : ''}`}
       type="button"
       onClick={(event) => item.unavailable ? showContext(event) : onSelect(item)}
       onPointerEnter={showContext}
@@ -593,6 +597,8 @@ function FinderFile({ item, onSelect, onHoverContext, grain = false }) {
       onBlur={() => { if (item.hoverText) onHoverContext(null) }}
       aria-label={item.hoverText ? `${item.name}: ${item.hoverText}` : item.name}
       aria-disabled={item.unavailable || undefined}
+      data-item-tooltip={item.hoverText || undefined}
+      data-tooltip-allow-panel={item.hoverText ? 'true' : undefined}
     >
       {contents}
     </button>
@@ -614,7 +620,6 @@ function AllItemTooltips() {
       }
       lastLayout = time
       const anchors = new Set(document.querySelectorAll('[data-item-tooltip]'))
-      const panel = document.querySelector('.center-stack')?.getBoundingClientRect()
       const occupied = []
       for (const [anchor, label] of labels) {
         if (!anchors.has(anchor)) {
@@ -623,6 +628,11 @@ function AllItemTooltips() {
         }
       }
       for (const anchor of anchors) {
+        if (!anchor.getClientRects().length) {
+          labels.get(anchor)?.remove()
+          labels.delete(anchor)
+          continue
+        }
         let label = labels.get(anchor)
         if (!label) {
           label = document.createElement('span')
@@ -634,6 +644,19 @@ function AllItemTooltips() {
           label.appendChild(copy)
           label.setAttribute('aria-label', anchor.dataset.itemTooltip)
           layer.appendChild(label)
+          let drag = null
+          label.onpointerdown = (event) => {
+            if (event.button !== 0) return
+            event.preventDefault()
+            label.setPointerCapture(event.pointerId)
+            drag = { x: event.clientX, y: event.clientY, dx: Number(label.dataset.dx || 0), dy: Number(label.dataset.dy || 0) }
+          }
+          label.onpointermove = (event) => {
+            if (!drag) return
+            label.dataset.dx = drag.dx + event.clientX - drag.x
+            label.dataset.dy = drag.dy + event.clientY - drag.y
+          }
+          label.onpointerup = label.onpointercancel = () => { drag = null }
           labels.set(anchor, label)
         }
         const bounds = anchor.getBoundingClientRect()
@@ -643,20 +666,11 @@ function AllItemTooltips() {
           Math.max(8, Math.min(x, window.innerWidth - width - 8)),
           Math.max(36, Math.min(y, window.innerHeight - height - 36)),
         ]
-        const preferred = clampPosition([bounds.left + bounds.width * 0.55, bounds.top + bounds.height * 0.2])
-        const overlapsPanel = ([x, y]) => panel &&
-          x < panel.right + 8 && x + width > panel.left - 8 &&
-          y < panel.bottom + 8 && y + height > panel.top - 8
-        const fits = ([x, y]) => !overlapsPanel([x, y]) && !occupied.some((rect) =>
+        const preferred = clampPosition([bounds.left + bounds.width * 0.55 + Number(label.dataset.dx || 0), bounds.top + bounds.height * 0.2 + Number(label.dataset.dy || 0)])
+        const fits = ([x, y]) => !occupied.some((rect) =>
           x < rect.right + 12 && x + width > rect.left - 12 &&
           y < rect.bottom + 12 && y + height > rect.top - 12)
         const candidates = [preferred]
-        if (panel) candidates.push(
-          [panel.left - width - 12, preferred[1]],
-          [panel.right + 12, preferred[1]],
-          [preferred[0], panel.top - height - 12],
-          [preferred[0], panel.bottom + 12],
-        )
         for (const rect of occupied) {
           candidates.push(
             [rect.left, rect.top - height - 12],
@@ -665,7 +679,7 @@ function AllItemTooltips() {
             [rect.right + 12, rect.top],
           )
         }
-        let available = candidates.map(clampPosition).filter(fits)
+        let available = label.dataset.dx !== undefined ? [preferred] : candidates.map(clampPosition).filter(fits)
         if (!available.length) {
           for (let y = 36; y <= window.innerHeight - height - 36; y += 16) {
             for (let x = 8; x <= window.innerWidth - width - 8; x += 16) {
@@ -731,24 +745,6 @@ function CursorContext({ context }) {
         top = context.y - bounds.height - gap
       }
 
-      const panel = document.querySelector('.center-stack')?.getBoundingClientRect()
-      const overlapsPanel = (x, y) => panel &&
-        x < panel.right + gap && x + bounds.width > panel.left - gap &&
-        y < panel.bottom + gap && y + bounds.height > panel.top - gap
-      if (overlapsPanel(left, top)) {
-        const candidates = [
-          [panel.left - bounds.width - gap, top],
-          [panel.right + gap, top],
-          [left, panel.top - bounds.height - gap],
-          [left, panel.bottom + gap],
-        ].map(([x, y]) => [
-          Math.max(viewportPadding, Math.min(x, window.innerWidth - bounds.width - viewportPadding)),
-          Math.max(viewportPadding, Math.min(y, window.innerHeight - bounds.height - viewportPadding)),
-        ]).filter(([x, y]) => !overlapsPanel(x, y))
-        candidates.sort((a, b) => Math.hypot(a[0] - left, a[1] - top) - Math.hypot(b[0] - left, b[1] - top))
-        if (candidates.length) [left, top] = candidates[0]
-      }
-
       setPosition({
         left: Math.max(viewportPadding, Math.min(left, window.innerWidth - bounds.width - viewportPadding)),
         top: Math.max(viewportPadding, Math.min(top, window.innerHeight - bounds.height - viewportPadding)),
@@ -780,6 +776,8 @@ function CursorContext({ context }) {
 }
 
 export default function App() {
+  const [deviceView, setDeviceView] = useState('popup')
+  const [popupOpen, setPopupOpen] = useState(true)
   const [showAllTooltips, setShowAllTooltips] = useState(false)
   const [background, setBackground] = useState('clouds')
   const backgrounds = ['clouds', 'stars']
@@ -787,6 +785,9 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState('media')
   const [selectedItem, setSelectedItem] = useState(null)
   const [hoverContext, setHoverContext] = useState(null)
+  const [focusedFile, setFocusedFile] = useState(null)
+  const [screenOn, setScreenOn] = useState(true)
+  const panelContentRef = useRef(null)
   const activeItems = activeCategory === 'pics'
     ? PIC_ICONS
     : activeCategory === 'pets'
@@ -794,6 +795,33 @@ export default function App() {
       : activeCategory === 'media'
         ? MEDIA_ICONS
         : []
+
+  const changeCategory = (step) => {
+    const current = CATEGORIES.findIndex((category) => category.name === activeCategory)
+    setActiveCategory(CATEGORIES[(current + step + CATEGORIES.length) % CATEGORIES.length].name)
+    setSelectedItem(null)
+    setFocusedFile(null)
+    setHoverContext(null)
+  }
+  const moveFile = (step) => {
+    if (selectedItem || !activeItems.length) {
+      panelContentRef.current?.scrollBy({ top: step * 70, behavior: 'smooth' })
+      return
+    }
+    const next = focusedFile === null ? (step > 0 ? 0 : activeItems.length - 1) :
+      (focusedFile + step + activeItems.length) % activeItems.length
+    setFocusedFile(next)
+    panelContentRef.current?.querySelectorAll('.file-button')[next]?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  }
+  const openFile = () => {
+    panelContentRef.current?.querySelectorAll('.file-button')[focusedFile ?? 0]?.click()
+  }
+  const home = () => {
+    setActiveCategory('media')
+    setSelectedItem(null)
+    setFocusedFile(null)
+    setScreenOn(true)
+  }
 
   return (
     <main
@@ -804,6 +832,8 @@ export default function App() {
         }
       }}
     >
+      <div className="page-lcd-overlay" aria-hidden="true" />
+      <div className="page-toggles">
       <button
         className="background-toggle"
         type="button"
@@ -820,6 +850,7 @@ export default function App() {
       >
         {toFancyGlyphs(showAllTooltips ? 'hide tooltips' : 'show tooltips')}
       </button>
+      </div>
       <svg className="texture-filters" aria-hidden="true">
         <filter id="media-grain" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="3" seed="17" result="noise" />
@@ -873,9 +904,10 @@ export default function App() {
         ))}
       </div>
       <div className="collage" aria-label="Thinking Leaf image collage">
-        {COLLAGE_IMAGES.map((image) => (
+        {COLLAGE_IMAGES.map((image, index) => (
           <CollagePiece
             image={image}
+            index={index}
             onHoverContext={setHoverContext}
             isContextActive={hoverContext?.source === image.className}
             key={image.className}
@@ -887,7 +919,41 @@ export default function App() {
         <CursorContext context={hoverContext} />
       )}
 
-      <div className="center-stack">
+      <div className={`center-stack${deviceView === 'popup' ? ' popup-window' : ''}${popupOpen ? '' : ' popup-closed'}${screenOn ? '' : ' ds-off'}`}>
+        {deviceView === 'popup' && (
+          <header className="popup-header">
+            <span>{toFancyGlyphs('Thinking Leaf')} 💭🍃</span>
+            <button type="button" aria-label="Close popup" title="Close popup" onClick={() => {
+              setPopupOpen(false)
+              setHoverContext(null)
+            }}>×</button>
+          </header>
+        )}
+        <img className="ds-shell" src="/assets/black-interactive-3ds-shell.webp" alt="" aria-hidden="true" draggable="false" />
+        <div className="ds-dpad">
+          <img className="dpad-rest" src="/assets/ds-button-dpad-black.webp" alt="" draggable="false" />
+          <img className="dpad-hover" src="/assets/ds-button-dpad-black-hover.webp" alt="" draggable="false" />
+          <img className="dpad-pressed" src="/assets/ds-button-dpad-black-pressed.webp" alt="" draggable="false" />
+          <button className="dpad-up" type="button" disabled={!screenOn} aria-label="Previous file or scroll up" title="Previous file / scroll up" onClick={() => moveFile(-1)} />
+          <button className="dpad-down" type="button" disabled={!screenOn} aria-label="Next file or scroll down" title="Next file / scroll down" onClick={() => moveFile(1)} />
+          <button className="dpad-left" type="button" disabled={!screenOn} aria-label="Previous category" title="Previous category" onClick={() => changeCategory(-1)} />
+          <button className="dpad-right" type="button" disabled={!screenOn} aria-label="Next category" title="Next category" onClick={() => changeCategory(1)} />
+        </div>
+        {[
+          ['a', 'Open selected file', openFile],
+          ['b', 'Back to files', () => setSelectedItem(null)],
+          ['x', 'Switch background', () => setBackground(nextBackground)],
+          ['y', 'Toggle tooltips', () => setShowAllTooltips((current) => !current)],
+          ['stick', 'Next category', () => changeCategory(1)],
+          ['c', 'Scroll to top', () => panelContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' })],
+          ['power', 'Toggle screens', () => setScreenOn((current) => !current)],
+        ].map(([name, label, action]) => (
+          <button className={`ds-control ds-control-${name}`} key={name} type="button" disabled={!screenOn && name !== 'power'} aria-label={label} title={label} onClick={action}>
+            <img className="ds-button-rest" src={`/assets/ds-button-${name}.webp`} alt="" draggable="false" />
+            <img className="ds-button-hover" src={`/assets/ds-button-${name}-hover.webp`} alt="" draggable="false" />
+          </button>
+        ))}
+        <button className="ds-control ds-control-home" type="button" aria-label="Home" title="Home" onClick={home} />
         <section className="index-panel">
           <nav className="category-row" aria-label="Categories">
             {CATEGORIES.map((category) => (
@@ -896,8 +962,10 @@ export default function App() {
                 type="button"
                 aria-label={category.name}
                 onClick={() => {
+                  setPopupOpen(true)
                   setActiveCategory(category.name)
                   setSelectedItem(null)
+                  setFocusedFile(null)
                   setHoverContext(null)
                 }}
                 key={category.name}
@@ -917,9 +985,9 @@ export default function App() {
           </nav>
         </section>
         <section className="upper-panel" aria-label={`${activeCategory} content panel`}>
-          <div className="panel-content">
+          <div className="panel-content" ref={panelContentRef}>
             {selectedItem ? (
-              <div className="file-preview">
+              <div className={`file-preview${activeCategory === 'media' ? ' media-preview' : ''}`}>
                 <div className="preview-image-wrap">
                   <img
                     className={activeCategory === 'media' ? 'media-grain' : ''}
@@ -996,12 +1064,13 @@ export default function App() {
               <div className="coming-soon">coming soon...</div>
             ) : (
               <div className="pics-grid">
-                {activeItems.map((item) => (
+                {activeItems.map((item, index) => (
                   <FinderFile
                     item={item}
                     onSelect={setSelectedItem}
                     onHoverContext={setHoverContext}
                     grain={activeCategory === 'media'}
+                    focused={focusedFile === index}
                     key={`${item.src}-${item.name}`}
                   />
                 ))}
@@ -1011,10 +1080,6 @@ export default function App() {
           <div className="finder-path" aria-label="Current Finder path">
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
               <span className="finder-folder" aria-hidden="true">💿</span>{toFancyGlyphs('Local Disk (C:)')}
-            </button>
-            <span className="path-divider" aria-hidden="true">&gt;</span>
-            <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
-              <span className="finder-folder" aria-hidden="true">📁</span>{toFancyGlyphs('Thinking Leaf')}
             </button>
             <span className="path-divider" aria-hidden="true">&gt;</span>
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>

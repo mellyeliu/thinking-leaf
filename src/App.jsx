@@ -1,30 +1,30 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 const COLLAGE_IMAGES = [
-  { src: '/assets/child-at-play-sign.webp', alt: 'Slow sign', className: 'sign' },
-  { src: '/assets/activity-cube-cutout.webp', alt: 'Activity cube', className: 'activity', cutout: true, aggressiveCutout: true },
-  { src: '/assets/sea-stax-box.webp', alt: 'Sea Stax puzzle box', className: 'sea', cutout: true },
-  { src: '/assets/sea-stax-pieces.webp', alt: 'Sea Stax animal pieces', className: 'sea-pieces', cutout: true, aggressiveCutout: true },
-  { src: '/assets/joker-blue.webp', alt: 'Blue joker card', className: 'joker-blue' },
-  { src: '/assets/joker-sketch.webp', alt: 'Joker sketch', className: 'joker-sketch' },
-  { src: '/assets/patriarchy-advisory.webp', alt: 'Patriarchy advisory', className: 'advisory', still: true },
-  { src: '/assets/clippy.webp', alt: 'Clippy', className: 'clippy' },
-  { src: '/assets/tamagotchi-pink.webp', alt: 'Pink virtual pet', className: 'tamagotchi' },
-  { src: '/assets/thisway-doll.webp', alt: 'Thisway doll', className: 'thisway-doll' },
-  { src: '/assets/retro-paint.webp', alt: 'Retro Paint window', className: 'retro-paint', trimTransparentBox: true },
-  { src: '/assets/candle-creature.webp', alt: 'Candle creature', className: 'candle-creature' },
-  { src: '/assets/pepper-oil.webp', alt: 'Pepper oil bottle', className: 'pepper-oil' },
-  { src: '/assets/pixel-face.webp', alt: 'Pixel-art face', className: 'pixel-face' },
+  { src: '/assets/child-at-play-sign.webp', alt: 'Slow autistic child at play sign', className: 'sign', hoverText: 'thank u madeleine <3' },
+  { src: '/assets/activity-cube-cutout.webp', alt: 'Activity cube', className: 'activity', cutout: true, aggressiveCutout: true, hoverText: 'roadside toddler bead maze turned spider playground\u00a0🕷️ 🛝' },
+  { src: '/assets/sea-stax-box.webp', alt: 'Sea Stax puzzle box', className: 'sea', cutout: true, hoverText: 'sea stax puzzle box' },
+  { src: '/assets/sea-stax-pieces.webp', alt: 'Sea Stax animal pieces', className: 'sea-pieces', cutout: true, aggressiveCutout: true, hoverText: 'sea stax creatures' },
+  { src: '/assets/joker-blue.webp', alt: 'Blue joker card', className: 'joker-blue', hoverText: 'recovering balatro addicts' },
+  { src: '/assets/joker-sketch.webp', alt: 'Joker sketch', className: 'joker-sketch', hoverText: 'recovering balatro addicts' },
+  { src: '/assets/patriarchy-advisory.webp', alt: 'Patriarchy advisory', className: 'advisory', still: true, hoverText: 'slut <> femcel <> ace superposition' },
+  { src: '/assets/clippy.webp', alt: 'Clippy', className: 'clippy', hoverText: "clippy's pliable little body\u00a0📎💘" },
+  { src: '/assets/tamagotchi-pink.webp', alt: 'Pink virtual pet', className: 'tamagotchi', hoverText: 'He lives in a space egg and with the right care he will transform into a virtual BOY.' },
+  { src: '/assets/thisway-doll.webp', alt: 'Clown Skullpanda doll', className: 'thisway-doll', hoverText: 'unwanted clown skullpanda' },
+  { src: '/assets/retro-paint.webp', alt: 'Retro Paint window', className: 'retro-paint', trimTransparentBox: true, hoverText: 'ms paint mirror!' },
+  { src: '/assets/candle-creature.webp', alt: 'Candle Skullpanda', className: 'candle-creature', hoverText: 'went to pmall over thanksgiving and came back with $200 worth of blind boxes' },
+  { src: '/assets/pepper-oil.webp', alt: 'Pepper oil bottle', className: 'pepper-oil', hoverText: 'Who Will Sponsor Our 花椒油 Keychain Merch Idea?' },
+  { src: '/assets/pixel-face.webp', alt: 'Pixel-art face', className: 'pixel-face', hoverText: 'pixel face' },
   { src: '/assets/stars.gif', alt: 'Animated green star', className: 'stars-gif' },
-  { src: '/assets/Gothorita.webp', alt: 'Gothorita', className: 'gothorita' },
-  { src: '/assets/greyfaerie.gif', alt: 'Animated grey faerie', className: 'grey-faerie', animatedCutout: true },
-  { src: '/assets/faeriegreen.gif', alt: 'Animated green faerie', className: 'green-faerie' },
+  { src: '/assets/Gothorita.webp', alt: 'Gothorita', className: 'gothorita', hoverText: 'gothorita\u00a0🖤🔮' },
+  { src: '/assets/greyfaerie.gif', alt: 'Animated grey faerie', className: 'grey-faerie', animatedCutout: true, hoverText: 'grey faerie' },
+  { src: '/assets/faeriegreen.gif', alt: 'Animated Negg Faerie', className: 'green-faerie', hoverText: 'negg faerie' },
   { src: '/assets/heart.gif', alt: 'Animated winged heart', className: 'winged-heart' },
-  { src: '/assets/ralts2.gif', alt: 'Animated tiny Ralts', className: 'ralts-tiny' },
-  { src: '/assets/raltss.webp', alt: 'Ralts', className: 'ralts-large', cutout: true },
-  { src: '/assets/sprout2.gif', alt: 'Animated sprout', className: 'sprout2-gif', animatedCutout: true },
-  { src: '/assets/lego-friends.png', alt: 'Lego flower friends', className: 'lego-friends' },
-  { src: '/assets/gameboy-color.png', alt: 'Pink Game Boy Color', className: 'gameboy-color', trimTransparentBox: true },
+  { src: '/assets/ralts2.gif', alt: 'Animated tiny Ralts', className: 'ralts-tiny', hoverText: 'tiny ralts\u00a0💚✨' },
+  { src: '/assets/raltss.webp', alt: 'Ralts', className: 'ralts-large', cutout: true, hoverText: 'ralts\u00a0💚🌸' },
+  { src: '/assets/sprout2.gif', alt: 'Animated sprout', className: 'sprout2-gif', animatedCutout: true, hoverText: 'no cilantro please!' },
+  { src: '/assets/lego-friends.png', alt: 'Lego flower friends', className: 'lego-friends', hoverText: 'lego gothorita and ralts <3' },
+  { src: '/assets/gameboy-color.png', alt: 'Pink Game Boy Color', className: 'gameboy-color', trimTransparentBox: true, hoverText: 'why play gameboy when you can play boygame?' },
 ]
 
 const CATEGORIES = [
@@ -395,11 +395,56 @@ function AnimatedBackgroundRemovedImage({ src, alt }) {
   return <canvas ref={canvasRef} role="img" aria-label={alt} />
 }
 
-function CollagePiece({ image }) {
+function CollagePiece({ image, onHoverContext, isContextActive }) {
   const [position, setPosition] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
   const [zIndex, setZIndex] = useState(null)
   const dragRef = useRef(null)
+  const rotationRef = useRef(null)
+
+  const updateHoverContext = (event) => {
+    if (!image.hoverText) return
+    onHoverContext({ text: image.hoverText, x: event.clientX, y: event.clientY, source: image.className })
+  }
+
+  const handlePointerEnter = (event) => {
+    if (event.pointerType === 'touch') return
+    updateHoverContext(event)
+    if (image.still || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const element = event.currentTarget
+    const currentRotation = getComputedStyle(element).rotate
+    const direction = image.className.length % 2 === 0 ? 1 : -1
+    rotationRef.current?.cancel()
+    rotationRef.current = element.animate([
+      { rotate: currentRotation === 'none' ? '0deg' : currentRotation, offset: 0 },
+      { rotate: `${direction * -2}deg`, offset: 0.3 },
+      { rotate: `${direction * 5}deg`, offset: 0.7 },
+      { rotate: `${direction * 3}deg`, offset: 1 },
+    ], {
+      duration: 760,
+      easing: 'cubic-bezier(.37, 0, .2, 1)',
+      fill: 'forwards',
+    })
+  }
+
+  const handlePointerLeave = (event) => {
+    if (event.pointerType === 'touch') return
+    if (image.hoverText) onHoverContext(null)
+    if (image.still || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const element = event.currentTarget
+    const currentRotation = getComputedStyle(element).rotate
+    rotationRef.current?.cancel()
+    rotationRef.current = element.animate([
+      { rotate: currentRotation === 'none' ? '0deg' : currentRotation },
+      { rotate: '0deg' },
+    ], {
+      duration: 420,
+      easing: 'cubic-bezier(.22, .61, .36, 1)',
+      fill: 'forwards',
+    })
+  }
 
   const handlePointerDown = (event) => {
     if (event.button !== undefined && event.button !== 0) return
@@ -411,6 +456,7 @@ function CollagePiece({ image }) {
       startY: event.clientY,
       left: element.offsetLeft,
       top: element.offsetTop,
+      moved: false,
     }
     nextCollageZIndex += 1
     setZIndex(nextCollageZIndex)
@@ -419,11 +465,17 @@ function CollagePiece({ image }) {
   }
 
   const handlePointerMove = (event) => {
+    if (event.pointerType !== 'touch') updateHoverContext(event)
     const drag = dragRef.current
     if (!drag || drag.pointerId !== event.pointerId) return
+
+    const deltaX = event.clientX - drag.startX
+    const deltaY = event.clientY - drag.startY
+    if (Math.hypot(deltaX, deltaY) > 6) drag.moved = true
+
     setPosition({
-      left: drag.left + event.clientX - drag.startX,
-      top: drag.top + event.clientY - drag.startY,
+      left: drag.left + deltaX,
+      top: drag.top + deltaY,
     })
   }
 
@@ -432,6 +484,17 @@ function CollagePiece({ image }) {
     if (!drag || drag.pointerId !== event.pointerId) return
     dragRef.current = null
     setIsDragging(false)
+
+    if (event.pointerType === 'touch' && !drag.moved && image.hoverText) {
+      const nextContext = {
+        text: image.hoverText,
+        x: event.clientX,
+        y: event.clientY,
+        source: image.className,
+      }
+      onHoverContext((current) => current?.source === image.className ? null : nextContext)
+    }
+
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId)
     }
@@ -446,9 +509,11 @@ function CollagePiece({ image }) {
 
   return (
     <div
-      className={`collage-piece ${image.className} ${image.still ? 'is-still' : ''} ${isDragging ? 'is-dragging' : ''}`}
+      className={`collage-piece ${image.className} ${image.still ? 'is-still' : ''} ${isDragging ? 'is-dragging' : ''} ${isContextActive ? 'is-context-active' : ''}`}
       style={draggedStyle}
       onPointerDown={handlePointerDown}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
       onPointerUp={finishDrag}
       onPointerCancel={finishDrag}
@@ -511,9 +576,78 @@ function FinderFile({ item, onSelect, grain = false }) {
   )
 }
 
+function CursorContext({ context }) {
+  const fancyText = toFancyGlyphs(context.text)
+  const characters = Array.from(fancyText)
+  const [visibleCharacters, setVisibleCharacters] = useState(0)
+  const [position, setPosition] = useState({ left: context.x + 14, top: context.y + 14 })
+  const measureRef = useRef(null)
+
+  useEffect(() => {
+    setVisibleCharacters(0)
+    const timer = window.setInterval(() => {
+      setVisibleCharacters((current) => {
+        if (current >= characters.length) {
+          window.clearInterval(timer)
+          return current
+        }
+        return current + 1
+      })
+    }, 22)
+
+    return () => window.clearInterval(timer)
+  }, [context.text])
+
+  useLayoutEffect(() => {
+    const placeTooltip = () => {
+      if (!measureRef.current) return
+      const bounds = measureRef.current.getBoundingClientRect()
+      const gap = 14
+      const viewportPadding = 8
+      let left = context.x + gap
+      let top = context.y + gap
+
+      if (left + bounds.width > window.innerWidth - viewportPadding) {
+        left = context.x - bounds.width + gap
+      }
+      if (top + bounds.height > window.innerHeight - viewportPadding) {
+        top = context.y - bounds.height - gap
+      }
+
+      setPosition({
+        left: Math.max(viewportPadding, Math.min(left, window.innerWidth - bounds.width - viewportPadding)),
+        top: Math.max(viewportPadding, Math.min(top, window.innerHeight - bounds.height - viewportPadding)),
+      })
+    }
+
+    placeTooltip()
+    window.addEventListener('resize', placeTooltip)
+    return () => window.removeEventListener('resize', placeTooltip)
+  }, [context.text, context.x, context.y])
+
+  return (
+    <>
+      <div
+        className="cursor-context"
+        role="tooltip"
+        aria-label={context.text}
+        style={position}
+      >
+        <span className="cursor-context-copy">
+          {characters.slice(0, visibleCharacters).join('')}
+        </span>
+      </div>
+      <div className="cursor-context cursor-context-measure" ref={measureRef} aria-hidden="true">
+        <span className="cursor-context-copy">{fancyText}</span>
+      </div>
+    </>
+  )
+}
+
 export default function App() {
   const [activeCategory, setActiveCategory] = useState('media')
   const [selectedItem, setSelectedItem] = useState(null)
+  const [hoverContext, setHoverContext] = useState(null)
   const activeItems = activeCategory === 'pics'
     ? PIC_ICONS
     : activeCategory === 'pets'
@@ -523,7 +657,14 @@ export default function App() {
         : []
 
   return (
-    <main className="dream-page">
+    <main
+      className="dream-page"
+      onPointerDown={(event) => {
+        if (event.pointerType === 'touch' && !event.target.closest('.collage-piece')) {
+          setHoverContext(null)
+        }
+      }}
+    >
       <svg className="texture-filters" aria-hidden="true">
         <filter id="media-grain" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="3" seed="17" result="noise" />
@@ -564,8 +705,18 @@ export default function App() {
         {Array.from({ length: 14 }, (_, index) => <i key={index}>✦</i>)}
       </div>
       <div className="collage" aria-label="Thinking Leaf image collage">
-        {COLLAGE_IMAGES.map((image) => <CollagePiece image={image} key={image.className} />)}
+        {COLLAGE_IMAGES.map((image) => (
+          <CollagePiece
+            image={image}
+            onHoverContext={setHoverContext}
+            isContextActive={hoverContext?.source === image.className}
+            key={image.className}
+          />
+        ))}
       </div>
+      {hoverContext && (
+        <CursorContext context={hoverContext} />
+      )}
 
       <div className="center-stack">
         <section className="index-panel">
@@ -684,7 +835,7 @@ export default function App() {
           </div>
           <div className="finder-path" aria-label="Current Finder path">
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
-              <span className="finder-folder" aria-hidden="true">📁</span>{toFancyGlyphs('Local Disk (C:)')}
+              <span className="finder-folder" aria-hidden="true">💽</span>{toFancyGlyphs('Local Disk (C:)')}
             </button>
             <span className="path-divider" aria-hidden="true">&gt;</span>
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
@@ -697,7 +848,7 @@ export default function App() {
             {selectedItem && (
               <>
                 <span className="path-divider" aria-hidden="true">&gt;</span>
-                <span className="path-file">🖼️{toFancyGlyphs(selectedItem.name)}</span>
+                <span className="path-file"><span aria-hidden="true">🖼️</span>{toFancyGlyphs(selectedItem.name)}</span>
               </>
             )}
           </div>

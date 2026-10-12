@@ -637,6 +637,7 @@ function AllItemTooltips() {
         if (!label) {
           label = document.createElement('span')
           label.className = 'always-tooltip'
+          if (anchor.dataset.tooltipAllowPanel === 'true') label.classList.add('tooltip-above-window')
           if (anchor.dataset.tooltipLines) label.dataset.lines = anchor.dataset.tooltipLines
           const copy = document.createElement('span')
           copy.className = 'always-tooltip-copy'
@@ -759,7 +760,7 @@ function CursorContext({ context }) {
   return (
     <>
       <div
-        className={`cursor-context${['tamagotchi', 'candle-creature'].includes(context.source) ? ' has-three-lines' : ''}`}
+        className={`cursor-context${['tamagotchi', 'candle-creature'].includes(context.source) ? ' has-three-lines' : ''}${context.source === 'coding-chameleon.png' ? ' tooltip-above-window' : ''}`}
         role="tooltip"
         aria-label={context.text}
         style={position}
@@ -1063,7 +1064,7 @@ export default function App() {
             ) : activeCategory === 'games' ? (
               <div className="coming-soon">coming soon...</div>
             ) : (
-              <div className="pics-grid">
+              <div className={`pics-grid${activeCategory === 'media' ? ' media-grid' : ''}`}>
                 {activeItems.map((item, index) => (
                   <FinderFile
                     item={item}

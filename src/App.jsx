@@ -857,7 +857,13 @@ export default function App() {
         </div>
       </div>
       <div className="sparkle-field" aria-hidden="true">
-        {Array.from({ length: 14 }, (_, index) => <i key={index}>✦</i>)}
+        {Array.from({ length: 22 }, (_, index) => (
+          <i key={index}>
+            <svg viewBox="0 0 40 40" focusable="false">
+              <path d="M20 0C21.3 16.8 23.2 18.7 40 20C23.2 21.3 21.3 23.2 20 40C18.7 23.2 16.8 21.3 0 20C16.8 18.7 18.7 16.8 20 0Z" />
+            </svg>
+          </i>
+        ))}
       </div>
       <div className="collage" aria-label="Thinking Leaf image collage">
         {COLLAGE_IMAGES.map((image) => (

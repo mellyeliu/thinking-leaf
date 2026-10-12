@@ -15,6 +15,18 @@ body {
   background: #b59aea;
 }
 
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50000;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(to bottom, rgb(24 20 44 / 8%) 0 1px, rgb(255 255 255 / 4%) 1px 2px, transparent 2px 4px),
+    repeating-linear-gradient(to right, rgb(255 110 130 / 2.5%) 0 1px, rgb(120 255 180 / 2.5%) 1px 2px, rgb(120 160 255 / 2.5%) 2px 3px),
+    radial-gradient(ellipse at center, transparent 65%, rgb(24 20 44 / 2.5%) 100%);
+}
+
 .dream-page {
   position: relative;
   min-height: 100svh;
@@ -225,6 +237,16 @@ body {
   animation: marquee-scroll 22s linear infinite;
 }
 
+.top-marquee::after,
+.bottom-marquee::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgb(225 238 255 / 6%) 0 1px, transparent 1px 4px);
+}
+
 .marquee-track > .marquee-copy {
   display: block;
   padding-right: 5rem;
@@ -308,6 +330,14 @@ body {
   animation: sparkle-twinkle 2.8s ease-in-out infinite;
 }
 
+.sparkle-field svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 7px rgb(168 255 208 / 75%));
+}
+
 .sparkle-field i:nth-child(1) { top: 9%; left: 8%; animation-delay: -0.4s; }
 .sparkle-field i:nth-child(2) { top: 20%; left: 29%; animation-delay: -1.7s; }
 .sparkle-field i:nth-child(3) { top: 8%; right: 27%; animation-delay: -0.9s; }
@@ -322,6 +352,18 @@ body {
 .sparkle-field i:nth-child(12) { bottom: 7%; right: 9%; animation-delay: -2.7s; }
 .sparkle-field i:nth-child(13) { top: 29%; left: 48%; animation-delay: -2s; }
 .sparkle-field i:nth-child(14) { bottom: 5%; left: 52%; animation-delay: -1s; }
+.sparkle-field i:nth-child(15) { top: 15%; left: 42%; animation-delay: -2.3s; }
+.sparkle-field i:nth-child(16) { top: 34%; left: 13%; animation-delay: -0.6s; }
+.sparkle-field i:nth-child(17) { top: 17%; right: 3%; animation-delay: -1.3s; }
+.sparkle-field i:nth-child(18) { top: 62%; right: 18%; animation-delay: -3.1s; }
+.sparkle-field i:nth-child(19) { bottom: 14%; left: 3%; animation-delay: -1.9s; }
+.sparkle-field i:nth-child(20) { bottom: 8%; right: 42%; animation-delay: -0.3s; }
+.sparkle-field i:nth-child(21) { top: 5%; left: 20%; animation-delay: -2.6s; }
+.sparkle-field i:nth-child(22) { bottom: 30%; right: 2%; animation-delay: -0.8s; }
+
+.sparkle-field i:nth-child(3n + 1) { font-size: clamp(10px, 1vw, 16px); animation-duration: 3.7s; }
+.sparkle-field i:nth-child(3n + 2) { font-size: clamp(16px, 1.7vw, 27px); animation-duration: 2.6s; }
+.sparkle-field i:nth-child(3n) { font-size: clamp(24px, 2.6vw, 40px); animation-duration: 4.3s; }
 
 .collage { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
 

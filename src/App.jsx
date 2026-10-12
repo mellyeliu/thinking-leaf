@@ -24,11 +24,11 @@ const COLLAGE_IMAGES = [
   { src: '/assets/raltss.webp', alt: 'Ralts', className: 'ralts-large', cutout: true, hoverText: 'ralts\u00a0💚🌸' },
   { src: '/assets/sprout2.gif', alt: 'Animated sprout', className: 'sprout2-gif', animatedCutout: true, hoverText: 'no cilantro please!' },
   { src: '/assets/lego-friends.png', alt: 'Lego flower friends', className: 'lego-friends', hoverText: 'lego gothorita and ralts <3' },
-  { src: '/assets/gameboy-color.png', alt: 'Pink Game Boy Color', className: 'gameboy-color', trimTransparentBox: true, hoverText: 'why play gameboy when you can play boygame?' },
+  { src: '/assets/gameboy-color.png', alt: 'Pink Game Boy Color', className: 'gameboy-color', trimTransparentBox: true, hoverText: 'why play gameboy when you can play boy♡game?' },
 ]
 
 const CATEGORIES = [
-  { name: 'music', label: '𝓶𝓾𝓼𝓲𝓬', icon: '/assets/icon-playlists.webp' },
+  { name: 'music', label: '𝓶𝓾𝓼𝓲𝓬', emoji: '💿' },
   { name: 'pets', label: '𝓹𝓮𝓽𝓼', icon: '/assets/icon-pets.webp' },
   { name: 'media', label: '𝓶𝓮𝓭𝓲𝓪', icon: '/assets/comp.webp' },
   { name: 'pics', label: '𝓹𝓲𝓬𝓼', icon: '/assets/icon-pics.webp' },
@@ -45,7 +45,7 @@ const PIC_ICONS = [
 const PET_ICONS = [
   { src: '/assets/spider-pet.webp', name: 'hypatia.png' },
   { src: '/assets/busy-town-spider.webp', name: 'aspasia.png' },
-  { src: '/assets/coding-chameleon.webp', name: 'coding-chameleon.png' },
+  { src: '/assets/coding-chameleon.webp', name: 'coding-chameleon.png', unavailable: true, hoverText: 'coming soon! (unassembled)' },
 ]
 
 const MEDIA_ICONS = [
@@ -552,25 +552,46 @@ function CrayonAvatar({ className, color, variant }) {
   )
 }
 
-function FinderFile({ item, onSelect, grain = false }) {
+function FinderFile({ item, onSelect, onHoverContext, grain = false }) {
+  const showContext = (event) => {
+    if (!item.hoverText) return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    onHoverContext({
+      text: item.hoverText,
+      x: event.clientX ?? bounds.left,
+      y: event.clientY ?? bounds.bottom,
+      source: item.name,
+    })
+  }
   const pngMatch = item.name.match(/^(.*)(\.png)$/i)
   const contents = (
     <>
       <img className={grain ? 'media-grain' : ''} src={item.src} alt="" draggable="false" loading="lazy" decoding="async" />
-      <span className="pic-file-name">
+      <span className="pic-file-name" aria-hidden="true">
         {pngMatch ? (
-          <>{pngMatch[1]}<wbr /><span className="file-extension">{pngMatch[2]}</span></>
-        ) : item.name}
+          <>{toFancyGlyphs(pngMatch[1])}<wbr /><span className="file-extension">{toFancyGlyphs(pngMatch[2])}</span></>
+        ) : toFancyGlyphs(item.name)}
       </span>
     </>
   )
 
   return item.href ? (
-    <a className="pic-file file-button" href={item.href} target="_blank" rel="noreferrer">
+    <a className="pic-file file-button" href={item.href} target="_blank" rel="noreferrer" aria-label={item.name}>
       {contents}
     </a>
   ) : (
-    <button className="pic-file file-button" type="button" onClick={() => onSelect(item)}>
+    <button
+      className={`pic-file file-button${item.unavailable ? ' is-unavailable' : ''}`}
+      type="button"
+      onClick={(event) => item.unavailable ? showContext(event) : onSelect(item)}
+      onPointerEnter={showContext}
+      onPointerMove={showContext}
+      onPointerLeave={() => { if (item.hoverText) onHoverContext(null) }}
+      onFocus={showContext}
+      onBlur={() => { if (item.hoverText) onHoverContext(null) }}
+      aria-label={item.hoverText ? `${item.name}: ${item.hoverText}` : item.name}
+      aria-disabled={item.unavailable || undefined}
+    >
       {contents}
     </button>
   )
@@ -645,6 +666,9 @@ function CursorContext({ context }) {
 }
 
 export default function App() {
+  const [background, setBackground] = useState('clouds')
+  const backgrounds = ['clouds', 'stars']
+  const nextBackground = backgrounds[(backgrounds.indexOf(background) + 1) % backgrounds.length]
   const [activeCategory, setActiveCategory] = useState('media')
   const [selectedItem, setSelectedItem] = useState(null)
   const [hoverContext, setHoverContext] = useState(null)
@@ -658,13 +682,21 @@ export default function App() {
 
   return (
     <main
-      className="dream-page"
+      className={`dream-page${background === 'stars' ? '' : ` has-${background}-background`}`}
       onPointerDown={(event) => {
         if (event.pointerType === 'touch' && !event.target.closest('.collage-piece')) {
           setHoverContext(null)
         }
       }}
     >
+      <button
+        className="background-toggle"
+        type="button"
+        aria-label={`Background: ${background}. Switch to ${nextBackground} background`}
+        onClick={() => setBackground(nextBackground)}
+      >
+        <span aria-hidden="true">✦ {toFancyGlyphs(background)} ↻</span>
+      </button>
       <svg className="texture-filters" aria-hidden="true">
         <filter id="media-grain" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="3" seed="17" result="noise" />
@@ -729,15 +761,20 @@ export default function App() {
                 onClick={() => {
                   setActiveCategory(category.name)
                   setSelectedItem(null)
+                  setHoverContext(null)
                 }}
                 key={category.name}
               >
-                <span className={`category-icon-slot ${category.icon ? '' : 'is-empty'}`}>
-                  {category.icon && (
-                    <BackgroundRemovedImage src={category.icon} alt={`${category.name} icon`} />
-                  )}
+                <span className="category-content">
+                  <span className={`category-icon-slot ${category.icon || category.emoji ? '' : 'is-empty'}`}>
+                    {category.emoji ? (
+                      <span className="category-emoji" aria-hidden="true">{category.emoji}</span>
+                    ) : category.icon && (
+                      <BackgroundRemovedImage src={category.icon} alt={`${category.name} icon`} />
+                    )}
+                  </span>
+                  <span className="category-label" aria-hidden="true">{category.label}</span>
                 </span>
-                <span className="category-label" aria-hidden="true">{category.label}</span>
               </button>
             ))}
           </nav>
@@ -756,7 +793,7 @@ export default function App() {
                   />
                 </div>
                 <div className="preview-copy">
-                  <h2>{selectedItem.name}</h2>
+                  <h2 aria-label={selectedItem.name}>{toFancyGlyphs(selectedItem.name)}</h2>
                 </div>
               </div>
             ) : activeCategory === 'music' ? (
@@ -826,6 +863,7 @@ export default function App() {
                   <FinderFile
                     item={item}
                     onSelect={setSelectedItem}
+                    onHoverContext={setHoverContext}
                     grain={activeCategory === 'media'}
                     key={`${item.src}-${item.name}`}
                   />
@@ -835,11 +873,11 @@ export default function App() {
           </div>
           <div className="finder-path" aria-label="Current Finder path">
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
-              <span className="finder-folder" aria-hidden="true">💽</span>{toFancyGlyphs('Local Disk (C:)')}
+              <span className="finder-folder" aria-hidden="true">💿</span>{toFancyGlyphs('Local Disk (C:)')}
             </button>
             <span className="path-divider" aria-hidden="true">&gt;</span>
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
-              <span className="finder-folder" aria-hidden="true">📁</span>{toFancyGlyphs('thinking-leaf')}
+              <span className="finder-folder" aria-hidden="true">📁</span>{toFancyGlyphs('Thinking Leaf')}
             </button>
             <span className="path-divider" aria-hidden="true">&gt;</span>
             <button className="path-tier" type="button" onClick={() => setSelectedItem(null)}>
